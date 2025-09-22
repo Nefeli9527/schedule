@@ -1,16 +1,60 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.Schedule" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <!-- Base application theme for night mode. -->
+    <style name="Theme.Schedule" parent="Theme.Material3.DayNight">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">@color/primary_80</item>
+        <item name="colorOnPrimary">@color/primary_20</item>
+        <item name="colorPrimaryContainer">@color/primary_30</item>
+        <item name="colorOnPrimaryContainer">@color/primary_90</item>
+        <item name="colorPrimaryInverse">@color/primary_40</item>
+        
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/secondary_80</item>
+        <item name="colorOnSecondary">@color/secondary_20</item>
+        <item name="colorSecondaryContainer">@color/secondary_30</item>
+        <item name="colorOnSecondaryContainer">@color/secondary_90</item>
+        
+        <!-- Tertiary brand color. -->
+        <item name="colorTertiary">@color/tertiary_80</item>
+        <item name="colorOnTertiary">@color/tertiary_20</item>
+        <item name="colorTertiaryContainer">@color/tertiary_30</item>
+        <item name="colorOnTertiaryContainer">@color/tertiary_90</item>
+        
+        <!-- Error colors -->
+        <item name="colorError">@color/error_80</item>
+        <item name="colorErrorContainer">@color/error_30</item>
+        <item name="colorOnError">@color/error_20</item>
+        <item name="colorOnErrorContainer">@color/error_90</item>
+        
+        <!-- Surface colors -->
+        <item name="colorSurface">@color/neutral_10</item>
+        <item name="colorOnSurface">@color/neutral_90</item>
+        <item name="colorSurfaceVariant">@color/neutral_30</item>
+        <item name="colorOnSurfaceVariant">@color/neutral_80</item>
+        <item name="colorSurfaceInverse">@color/neutral_90</item>
+        <item name="colorOnSurfaceInverse">@color/neutral_20</item>
+        
+        <!-- Outline colors -->
+        <item name="colorOutline">@color/neutral_60</item>
+        <item name="colorOutlineVariant">@color/neutral_40</item>
+        
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        
+        <!-- Navigation bar color. -->
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+    
+    <!-- Dynamic color theme (Monet) for API 31+ in night mode -->
+    <style name="Theme.Schedule.Dynamic" parent="Theme.Material3.DynamicColors.DayNight">
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        
+        <!-- Navigation bar color. -->
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar">false</item>
     </style>
 </resources>

@@ -1,10 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Dynamic colors for Monet theming -->
+    <color name="seed">#FF6750A4</color> <!-- Default seed color -->
+    
+    <!-- Primary colors -->
+    <color name="primary_0">#FF000000</color>
+    <color name="primary_10">#FF21005D</color>
+    <color name="primary_20">#FF381E8F</color>
+    <color name="primary_30">#FF4F378B</color>
+    <color name="primary_40">#FF6750A4</color>
+    <color name="primary_50">#FF7F67BE</color>
+    <color name="primary_60">#FF9A82DB</color>
+    <color name="primary_70">#FFB69DF8</color>
+    <color name="primary_80">#FFD0BCFF</color>
+    <color name="primary_90">#FFEADDFF</color>
+    <color name="primary_95">#FFF6EDFF</color>
+    <color name="primary_99">#FFFFFBFE</color>
+    <color name="primary_100">#FFFFFFFF</color>
+    
+    <!-- Secondary colors -->
+    <color name="secondary_0">#FF000000</color>
+    <color name="secondary_10">#FF1D192B</color>
+    <color name="secondary_20">#FF332D41</color>
+    <color name="secondary_30">#FF4A4458</color>
+    <color name="secondary_40">#FF625B71</color>
+    <color name="secondary_50">#FF7A7289</color>
+    <color name="secondary_60">#FF958DA5</color>
+    <color name="secondary_70">#FFB0A7C0</color>
+    <color name="secondary_80">#FFCCC2DC</color>
+    <color name="secondary_90">#FFE8DEF8</color>
+    <color name="secondary_95">#FFF6EDFF</color>
+    <color name="secondary_99">#FFFFFBFE</color>
+    <color name="secondary_100">#FFFFFFFF</color>
+    
+    <!-- Tertiary colors -->
+    <color name="tertiary_0">#FF000000</color>
+    <color name="tertiary_10">#FF31111D</color>
+    <color name="tertiary_20">#FF492532</color>
+    <color name="tertiary_30">#FF633B48</color>
+    <color name="tertiary_40">#FF7D5260</color>
+    <color name="tertiary_50">#FF986977</color>
+    <color name="tertiary_60">#FFB58392</color>
+    <color name="tertiary_70">#FFD29DAC</color>
+    <color name="tertiary_80">#FFEFB8C8</color>
+    <color name="tertiary_90">#FFFFD8E4</color>
+    <color name="tertiary_95">#FFFFECF1</color>
+    <color name="tertiary_99">#FFFFFBFA</color>
+    <color name="tertiary_100">#FFFFFFFF</color>
+    
+    <!-- Neutral colors -->
+    <color name="neutral_0">#FF000000</color>
+    <color name="neutral_10">#FF1C1B1F</color>
+    <color name="neutral_20">#FF313033</color>
+    <color name="neutral_30">#FF484649</color>
+    <color name="neutral_40">#FF605D62</color>
+    <color name="neutral_50">#FF787579</color>
+    <color name="neutral_60">#FF939094</color>
+    <color name="neutral_70">#FFAEAAAE</color>
+    <color name="neutral_80">#FFC9C5CA</color>
+    <color name="neutral_90">#FFE6E1E5</color>
+    <color name="neutral_95">#FFF4EFF4</color>
+    <color name="neutral_99">#FFFCF8FD</color>
+    <color name="neutral_100">#FFFFFFFF</color>
+    
+    <!-- Error colors -->
+    <color name="error_0">#FF000000</color>
+    <color name="error_10">#FF410E0B</color>
+    <color name="error_20">#FF601410</color>
+    <color name="error_30">#FF8C1D18</color>
+    <color name="error_40">#FFB3261E</color>
+    <color name="error_50">#FFDC362E</color>
+    <color name="error_60">#FFE46962</color>
+    <color name="error_70">#FFEC928E</color>
+    <color name="error_80">#FFF2B8B5</color>
+    <color name="error_90">#FFF9DEDC</color>
+    <color name="error_95">#FFFCEEEE</color>
+    <color name="error_99">#FFFFFBF9</color>
+    <color name="error_100">#FFFFFFFF</color>
 </resources>

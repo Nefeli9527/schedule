@@ -1,3 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Schedule</string>
+    <string name="schedule_title">课程表</string>
+    <string name="settings_title">设置</string>
+    <string name="settings">设置</string>
+    <string name="import_schedule_title">导入课程表</string>
+    <string name="add_course_title">添加课程</string>
+    <string name="course_list_title">课程列表</string>
+    <string name="menu_settings">设置</string>
+    <string name="menu_import">导入课程表</string>
+    <string name="menu_course_list">课程列表</string>
+    <string name="add_course_fab">添加课程</string>
+    <string name="course_name_hint">课程名称</string>
+    <string name="teacher_hint">教师</string>
+    <string name="classroom_hint">教室</string>
+    <string name="day_label">星期</string>
+    <string name="period_label">节次</string>
+    <string name="end_period_label">结束节次</string>
+    <string name="weeks_label">选择周次</string>
+    <string name="select_all">全选</string>
+    <string name="clear_all">清空</string>
+    <string name="add_course_button">添加课程</string>
+    <string name="continue_adding">继续添加</string>
+    <string name="periods_per_day">每日课节数</string>
+    <string name="periods_per_day_desc">设置每天的课节总数</string>
+    <string name="show_weekends">显示周末</string>
+    <string name="show_weekends_desc">是否在课程表中显示周六和周日</string>
+    <string name="total_weeks">总周数</string>
+    <string name="total_weeks_desc">学期总周数</string>
+    <string name="enable_week_navigation">启用周次导航</string>
+    <string name="enable_week_navigation_desc">允许查看其他周的课程安排</string>
+    <string name="double_back_to_exit">双击返回退出</string>
+    <string name="double_back_to_exit_desc">开启后需要按两次返回键才能退出应用</string>
+    <string name="semester_start_date">开学日期</string>
+    <string name="semester_start_date_desc">学期开始日期: %s</string>
+    <string name="select">选择</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="import_instructions">选择一个 .wakeup_schedule 文件以导入课程表数据</string>
+    <string name="choose_file">选择文件</string>
+    <string name="importing">正在导入课程表...</string>
+    <string name="import_success">课程表导入成功！</string>
+    <string name="import_failed">导入失败: %s</string>
+    <string name="debug_info">调试信息</string>
+    <string name="previous_week">上一周</string>
+    <string name="next_week">下一周</string>
+    <string name="week_number">第%d周</string>
+    <string name="period_format">%d</string>
+    <string name="monday">一</string>
+    <string name="tuesday">二</string>
+    <string name="wednesday">三</string>
+    <string name="thursday">四</string>
+    <string name="friday">五</string>
+    <string name="saturday">六</string>
+    <string name="sunday">日</string>
+    <string name="selected_weeks_count">已选中%d周</string>
+    <string name="date_format">%d/%d</string>
+    <string name="exit_prompt">再按一次退出应用</string>
+    <string name="debug_mode_enabled">调试模式已开启</string>
+
+    <!-- Schedule Settings -->
+    <string name="schedule_settings_title">%s 设置</string>
+    <string name="schedule_color">课表颜色</string>
+    <string name="schedule_color_desc">设置此课表的主题颜色</string>
+    <string name="course_notifications">课程通知</string>
+    <string name="course_notifications_desc">为课程启用提醒通知</string>
+    <string name="reminder_time">提醒时间</string>
+    <string name="reminder_time_desc">课前几分钟提醒（0表示禁用）</string>
+    <string name="back">返回</string>
+    
+    <!-- Timetable Settings -->
+    <string name="timetable_settings">时间表设置</string>
+    <string name="quick_setup">快捷设置</string>
+    <string name="active_timetable">当前激活的时间表</string>
+    <string name="sub_timetables">子时间表</string>
+    <string name="period_schedule">%s 的课程时间安排</string>
+    <string name="period_number">%d</string>
+    <string name="active">激活</string>
+    <string name="period_count">%d节课</string>
+    <string name="quick_setup_description">自动分配课程时间，上午4节，下午4节，晚上1节</string>
+    <string name="morning_start_time">上午开始时间</string>
+    <string name="afternoon_start_time">下午开始时间</string>
+    <string name="evening_start_time">晚上开始时间</string>
+    <string name="period_duration">每节课时长</string>
+    <string name="break_duration">普通课间时长</string>
+    <string name="long_break_duration">大课间时长</string>
+    <string name="break_periods">大课间位置</string>
+    <string name="break_periods_hint">请输入大课间的位置，例如：2,4</string>
+    <string name="minutes">分钟</string>
+    <string name="select_time">选择时间</string>
+    <string name="confirm">确认</string>
+    <string name="unknown">未知</string>
+    <string name="none">无</string>
+    <string name="switch_date">切换日期</string>
+    <string name="change">更改</string>
+    <string name="break_periods_example">示例：2,4（表示第2节和第4节后为大课间）</string>
+
+    <!-- Reset Timetable -->
+    <string name="reset_timetable">重置时间表</string>
+    <string name="reset_timetable_confirm_message">确定要重置此时间表吗？这将删除该时间表中的所有课程和课程安排。</string>
 </resources>
