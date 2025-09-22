@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Schedule</string>
+    <string name="schedule_title">Schedule</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings">Settings</string>
+    <string name="import_schedule_title">Import Schedule</string>
+    <string name="add_course_title">Add Course</string>
+    <string name="course_list_title">Course List</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_import">Import Schedule</string>
+    <string name="menu_course_list">Course List</string>
+    <string name="add_course_fab">Add Course</string>
+    <string name="course_name_hint">Course Name</string>
+    <string name="teacher_hint">Teacher</string>
+    <string name="classroom_hint">Classroom</string>
+    <string name="day_label">Day</string>
+    <string name="period_label">Period</string>
+    <string name="end_period_label">End Period</string>
+    <string name="weeks_label">Select Weeks</string>
+    <string name="select_all">Select All</string>
+    <string name="clear_all">Clear All</string>
+    <string name="add_course_button">Add Course</string>
+    <string name="continue_adding">Continue Adding</string>
+    <string name="periods_per_day">Periods Per Day</string>
+    <string name="periods_per_day_desc">Set the total number of periods per day</string>
+    <string name="show_weekends">Show Weekends</string>
+    <string name="show_weekends_desc">Show Saturday and Sunday in the schedule</string>
+    <string name="total_weeks">Total Weeks</string>
+    <string name="total_weeks_desc">Total number of weeks in the semester</string>
+    <string name="enable_week_navigation">Enable Week Navigation</string>
+    <string name="enable_week_navigation_desc">Allow viewing other weeks\' schedules</string>
+    <string name="double_back_to_exit">Double Back to Exit</string>
+    <string name="double_back_to_exit_desc">Press back twice to exit the app</string>
+    <string name="semester_start_date">Semester Start Date</string>
+    <string name="semester_start_date_desc">Semester start date: %s</string>
+    <string name="select">Select</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="import_instructions">Select a .wakeup_schedule file to import schedule data</string>
+    <string name="choose_file">Choose File</string>
+    <string name="importing">Importing schedule...</string>
+    <string name="import_success">Schedule imported successfully!</string>
+    <string name="import_failed">Import failed: %s</string>
+    <string name="debug_info">Debug Info</string>
+    <string name="previous_week">Previous Week</string>
+    <string name="next_week">Next Week</string>
+    <string name="week_number">Week %d</string>
+    <string name="period_format">%d</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+    <string name="sunday">Sun</string>
+    <string name="selected_weeks_count">%d weeks selected</string>
+    <string name="date_format">%d/%d</string>
+    <string name="exit_prompt">Press back again to exit</string>
+    <string name="debug_mode_enabled">Debug mode enabled</string>
+
+    <!-- Schedule Settings -->
+    <string name="schedule_settings_title">%s Settings</string>
+    <string name="schedule_color">Schedule Color</string>
+    <string name="schedule_color_desc">Set the theme color for this schedule</string>
+    <string name="course_notifications">Course Notifications</string>
+    <string name="course_notifications_desc">Enable reminder notifications for courses</string>
+    <string name="reminder_time">Reminder Time</string>
+    <string name="reminder_time_desc">Minutes before class to remind (0 to disable)</string>
+    <string name="back">Back</string>
+
+    <!-- Timetable Settings -->
+    <string name="timetable_settings">Timetable Settings</string>
+    <string name="quick_setup">Quick Setup</string>
+    <string name="active_timetable">Active Timetable</string>
+    <string name="sub_timetables">Sub Timetables</string>
+    <string name="period_schedule">%s\'s Period Schedule</string>
+    <string name="period_number">%d</string>
+    <string name="active">Active</string>
+    <string name="period_count">%d periods</string>
+    <string name="quick_setup_description">Automatically assign class times, 4 in the morning, 4 in the afternoon, and 1 in the evening</string>
+    <string name="morning_start_time">Morning Start Time</string>
+    <string name="afternoon_start_time">Afternoon Start Time</string>
+    <string name="evening_start_time">Evening Start Time</string>
+    <string name="period_duration">Period Duration</string>
+    <string name="break_duration">Break Duration</string>
+    <string name="long_break_duration">Long Break Duration</string>
+    <string name="break_periods">Long Break Positions</string>
+    <string name="break_periods_hint">Enter the positions of long breaks, e.g.: 2,4</string>
+    <string name="minutes">minutes</string>
+    <string name="select_time">Select Time</string>
+    <string name="confirm">Confirm</string>
+    <string name="unknown">Unknown</string>
+    <string name="none">None</string>
+    <string name="switch_date">Switch Date</string>
+    <string name="change">Change</string>
+    <string name="break_periods_example">Example: 2,4 (long breaks after period 2 and 4)</string>
+
+    <!-- Reset Timetable -->
+    <string name="reset_timetable">Reset Timetable</string>
+    <string name="reset_timetable_confirm_message">Are you sure you want to reset this timetable? This will delete all courses and schedules in this timetable.</string>
+</resources>
