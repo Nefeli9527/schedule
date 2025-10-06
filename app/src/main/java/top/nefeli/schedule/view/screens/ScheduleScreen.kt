@@ -8,6 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -26,6 +27,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
@@ -53,10 +55,15 @@ fun ScheduleScreen(
     val periods by viewModel.period.collectAsStateWithLifecycle()
     var tapCount by remember { mutableIntStateOf(0) }
     val tapTimeoutMs = 3000L // 3秒内点击有效
+    val context = LocalContext.current
     
     LaunchedEffect(tapCount) {
         if (tapCount in 1..4) {
             // 如果在3秒内没有达到5次点击，则重置计数
+            delay(tapTimeoutMs)
+            tapCount = 0
+        } else if (tapCount in 5..9) {
+            // 5-9次点击用于测试进度通知
             delay(tapTimeoutMs)
             tapCount = 0
         }
@@ -77,6 +84,22 @@ fun ScheduleScreen(
                         containerColor = MaterialTheme.colorScheme.primaryContainer
                     ),
                     actions = {
+                        // 添加测试提醒按钮（仅在调试模式下显示）
+                        if (top.nefeli.schedule.DEBUG) {
+                            IconButton(onClick = {
+                                // 发送一分钟后的测试提醒
+                                val courseReminderManager =
+                                    viewModel.getCourseReminderManager(context)
+                                courseReminderManager.scheduleImmediateTestReminder()
+                            }) {
+                                Icon(
+                                    Icons.Default.Notifications,
+                                    contentDescription = "测试提醒",
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            }
+                        }
+                        
                         IconButton(onClick = navigateToImport) {
                             Icon(
                                 Icons.Default.Share,
@@ -103,7 +126,18 @@ fun ScheduleScreen(
                         enabled = true,
                         onClick = {
                             tapCount++
-                            if (tapCount >= 5) {
+                            if (tapCount in 5..9) {
+                                // 发送带操作按钮的测试通知，显示最近要上的课程
+                                val courseReminderManager =
+                                    viewModel.getCourseReminderManager(context)
+                                courseReminderManager.scheduleImmediateTestReminder()
+                            } else if (tapCount in 10..14) {
+                                // 发送测试进度通知
+                                val courseReminderManager =
+                                    viewModel.getCourseReminderManager(context)
+                                courseReminderManager.scheduleImmediateTestReminder()
+                            } else if (tapCount >= 15) {
+                                // 连续点击15次启用调试模式
                                 onDebugModeChanged(true)
                                 tapCount = 0
                             }

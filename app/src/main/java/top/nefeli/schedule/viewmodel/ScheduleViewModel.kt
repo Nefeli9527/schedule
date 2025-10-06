@@ -1,6 +1,7 @@
 package top.nefeli.schedule.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +22,7 @@ import top.nefeli.schedule.model.Period
 import top.nefeli.schedule.model.Schedule
 import top.nefeli.schedule.model.Teacher
 import top.nefeli.schedule.model.Timetable
+import top.nefeli.schedule.util.CourseReminderManager
 
 /**
  * 课程表 ViewModel 类
@@ -67,11 +69,16 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
     private val _isQuickCacheLoaded = MutableStateFlow(false)
     val isQuickCacheLoaded: StateFlow<Boolean> = _isQuickCacheLoaded.asStateFlow()
 
+    companion object {
+        private const val TAG = "DEBUG"
+    }
+
     /**
      * 初始化函数
      * 在 ViewModel 创建时加载所有必要数据
      */
     init {
+        Log.d(TAG, "ViewModel初始化开始")
         loadTimetables()
         loadLocations()
         loadTeachers()
@@ -81,24 +88,30 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
         
         // 初始化默认的作息时间表
         viewModelScope.launch {
+            Log.d(TAG, "初始化默认作息时间表")
             repository.initializeDefaultPeriods()
             // 重新加载作息时间表数据以确保UI更新
             loadPeriods()
         }
+        Log.d(TAG, "ViewModel初始化完成")
     }
 
     /**
      * 加载所有课表数据
      */
     private fun loadTimetables() {
+        Log.d(TAG, "loadTimetables() called")
         viewModelScope.launch {
             _timetables.value = repository.getAllTimetables()
+            Log.d(TAG, "课表数据加载完成，数量: ${_timetables.value.size}")
             // 如果当前没有选中课表且存在课表，则选中第一个
             if (_currentTimetableId.value == null && _timetables.value.isNotEmpty()) {
+                Log.d(TAG, "未选中课表，选择第一个课表")
                 selectTimetable(_timetables.value.first().id)
             } else if (_timetables.value.isNotEmpty()) {
                 // 如果已经有选中的课表，重新加载该课表的数据
                 _currentTimetableId.value?.let { timetableId ->
+                    Log.d(TAG, "已选中课表，重新加载课表数据，课表ID: $timetableId")
                     loadCoursesForTimetable(timetableId)
                     loadSchedules()
                 }
@@ -110,8 +123,10 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
      * 加载所有地点数据
      */
     private fun loadLocations() {
+        Log.d(TAG, "loadLocations() called")
         viewModelScope.launch {
             _locations.value = repository.getAllLocations()
+            Log.d(TAG, "地点数据加载完成，数量: ${_locations.value.size}")
         }
     }
 
@@ -119,8 +134,10 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
      * 加载所有教师数据
      */
     private fun loadTeachers() {
+        Log.d(TAG, "loadTeachers() called")
         viewModelScope.launch {
             _teachers.value = repository.getAllTeachers()
+            Log.d(TAG, "教师数据加载完成，数量: ${_teachers.value.size}")
         }
     }
 
@@ -128,8 +145,10 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
      * 加载所有作息时间表数据
      */
     private fun loadPeriods() {
+        Log.d(TAG, "loadPeriods() called")
         viewModelScope.launch {
             _period.value = repository.getAllPeriods()
+            Log.d(TAG, "作息时间表数据加载完成，数量: ${_period.value.size}")
         }
     }
 
@@ -137,19 +156,23 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
      * 加载调课记录数据
      */
     private fun loadAdjustments() {
+        Log.d(TAG, "loadAdjustments() called")
         viewModelScope.launch {
             _adjustments.value = repository.loadAdjustments()
+            Log.d(TAG, "调课记录数据加载完成，数量: ${_adjustments.value.size}")
         }
     }
 
     // 加载快速缓存数据
     private fun loadQuickCache() {
+        Log.d(TAG, "loadQuickCache() called")
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val prefs = context.getSharedPreferences("schedule_cache", Context.MODE_PRIVATE)
                 val cachedData = prefs.getString("current_schedule_data", null)
 
                 if (cachedData != null) {
+                    Log.d(TAG, "发现缓存数据，正在加载")
                     val json = JSONObject(cachedData)
                     val timetableId = json.getLong("timetableId")
 
@@ -203,6 +226,7 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
                         _courses.value = cachedCourses
                         _schedules.value = cachedSchedules
                         _isQuickCacheLoaded.value = true
+                        Log.d(TAG, "缓存数据加载完成")
                         
                         // 确保其他相关数据也被加载
                         loadLocations()
@@ -211,10 +235,12 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
                         loadAdjustments()
                     }
                 } else {
+                    Log.d(TAG, "未发现缓存数据，从数据库加载")
                     // 没有缓存数据时，从数据库加载最新数据并更新缓存
                     loadFromDatabaseAndRefreshCache()
                 }
             } catch (e: Exception) {
+                Log.e(TAG, "加载缓存数据时出错", e)
                 // 出错时也从数据库加载数据
                 loadFromDatabaseAndRefreshCache()
             }
@@ -223,6 +249,7 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
 
     // 从数据库加载最新数据并更新缓存
     private fun loadFromDatabaseAndRefreshCache() {
+        Log.d(TAG, "loadFromDatabaseAndRefreshCache() called")
         viewModelScope.launch {
             loadTimetables()
             loadLocations()
@@ -234,6 +261,7 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
 
     // 保存当前数据到快速缓存
     private fun saveToQuickCache(timetableId: Long, courses: List<Course>, schedules: List<Schedule>) {
+        Log.d(TAG, "saveToQuickCache() called")
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val prefs = context.getSharedPreferences("schedule_cache", Context.MODE_PRIVATE)
@@ -285,7 +313,9 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
                 prefs.edit {
                     putString("current_schedule_data", jsonData.toString())
                 }
+                Log.d(TAG, "数据已保存到缓存")
             } catch (e: Exception) {
+                Log.e(TAG, "保存缓存数据时出错", e)
             }
         }
     }
@@ -296,6 +326,7 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
      * @param timetableId 课表ID
      */
     fun selectTimetable(timetableId: Long) {
+        Log.d(TAG, "selectTimetable() called with timetableId: $timetableId")
         _currentTimetableId.value = timetableId
         loadCoursesForTimetable(timetableId)
         loadSchedules()
@@ -307,9 +338,11 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
      * @param timetableId 课表ID
      */
     private fun loadCoursesForTimetable(timetableId: Long) {
+        Log.d(TAG, "loadCoursesForTimetable() called with timetableId: $timetableId")
         viewModelScope.launch {
             val courses = repository.getCoursesByTimetable(timetableId)
             _courses.value = courses
+            Log.d(TAG, "课程数据加载完成，数量: ${courses.size}")
 
             // 同时保存到快速缓存
             _currentTimetableId.value?.let { currentTimetableId ->
@@ -324,11 +357,13 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
      * 加载所有时间安排
      */
     private fun loadSchedules() {
+        Log.d(TAG, "loadSchedules() called")
         viewModelScope.launch {
             val schedules = _currentTimetableId.value?.let { timetableId ->
                 repository.getSchedulesByTimetable(timetableId)
             } ?: emptyList()
             _schedules.value = schedules
+            Log.d(TAG, "时间安排数据加载完成，数量: ${schedules.size}")
 
             // 同时保存到快速缓存
             _currentTimetableId.value?.let { timetableId ->
@@ -364,6 +399,8 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
             _currentTimetableId.value?.let { timetableId ->
                 loadCoursesForTimetable(timetableId)
             }
+            // 更新小组件
+            updateWidgets()
         }
     }
 
@@ -383,7 +420,6 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
 
             if (isCourseNameExists) {
                 // 如果课程名称已存在，添加新的时间安排到现有课程
-                println("Course name already exists: ${course.name}, adding schedules to existing course")
 
                 // 查找现有课程
                 val existingCourse = _currentTimetableId.value?.let { timetableId ->
@@ -403,21 +439,16 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
                         val existsInDb = existingSchedules.any { it.id == schedule.id }
                         if (existsInDb) {
                             val updatedSchedule = schedule.copy(courseId = existingCourse.id)
-                            println("Updating existing schedule: $updatedSchedule")
                             try {
                                 repository.updateSchedule(updatedSchedule)
                             } catch (e: Exception) {
-                                println("Error updating schedule: ${e.message}")
                             }
                         } else {
                             // 如果不存在于数据库中，当作新安排添加
                             val newSchedule = schedule.copy(courseId = existingCourse.id)
-                            println("Adding new schedule to existing course: $newSchedule")
                             try {
                                 val scheduleId = repository.addSchedule(newSchedule)
-                                println("Added schedule with ID: $scheduleId")
                             } catch (e: Exception) {
-                                println("Error adding schedule: ${e.message}")
                             }
                         }
                     }
@@ -425,12 +456,9 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
                     // 添加新的时间安排
                     for (schedule in schedulesToAdd) {
                         val newSchedule = schedule.copy(courseId = existingCourse.id)
-                        println("Adding new schedule to existing course: $newSchedule")
                         try {
                             val scheduleId = repository.addSchedule(newSchedule)
-                            println("Added schedule with ID: $scheduleId")
                         } catch (e: Exception) {
-                            println("Error adding schedule: ${e.message}")
                         }
                     }
 
@@ -439,35 +467,30 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
                         loadCoursesForTimetable(timetableId)
                     }
                     loadSchedules()
+                    // 更新小组件
+                    updateWidgets()
                 }
                 return@launch
             }
 
-            println("Adding new course: $course")
             // 添加课程并获取ID
             val courseId = try {
                 repository.addCourse(course)
             } catch (e: Exception) {
-                println("Error adding course: ${e.message}")
                 return@launch
             }
-            println("Added course with ID: $courseId")
 
             // 更新所有时间安排的课程ID
             val updatedSchedules = schedules.map { schedule ->
                 val updated = schedule.copy(courseId = courseId)
-                println("Updating schedule with course ID: $updated")
                 updated
             }
 
             // 添加所有时间安排
             for (schedule in updatedSchedules) {
-                println("Adding schedule: $schedule")
                 try {
                     val scheduleId = repository.addSchedule(schedule)
-                    println("Added schedule with ID: $scheduleId")
                 } catch (e: Exception) {
-                    println("Error adding schedule: ${e.message}")
                 }
             }
 
@@ -476,6 +499,8 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
                 loadCoursesForTimetable(timetableId)
             }
             loadSchedules()
+            // 更新小组件
+            updateWidgets()
         }
     }
 
@@ -490,6 +515,8 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
             _currentTimetableId.value?.let { timetableId ->
                 loadCoursesForTimetable(timetableId)
             }
+            // 更新小组件
+            updateWidgets()
         }
     }
 
@@ -526,6 +553,8 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
 
             // 刷新数据
             loadSchedules()
+            // 更新小组件
+            updateWidgets()
         }
     }
 
@@ -540,6 +569,8 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
             _currentTimetableId.value?.let { timetableId ->
                 loadCoursesForTimetable(timetableId)
             }
+            // 更新小组件
+            updateWidgets()
         }
     }
 
@@ -555,9 +586,20 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
                 if (id == timetableId) {
                     loadCoursesForTimetable(timetableId)
                     loadSchedules()
+                    // 更新小组件
+                    updateWidgets()
                 }
             }
         }
+    }
+
+    /**
+     * 更新小组件
+     */
+    private fun updateWidgets() {
+        Log.d(TAG, "updateWidgets() called")
+        // 调用小组件更新方法
+        top.nefeli.schedule.widget.RecentCourseWidget.updateWidgets(context)
     }
 
     /**
@@ -880,6 +922,20 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
      */
     suspend fun findSchedulesByCourse(courseId: Long): List<Schedule> {
         return repository.getSchedulesByCourse(courseId)
+    }
+
+    /**
+     * 获取数据仓库
+     */
+    fun getRepository(): ScheduleRepository {
+        return repository
+    }
+
+    /**
+     * 获取课程提醒管理器
+     */
+    fun getCourseReminderManager(context: Context): CourseReminderManager {
+        return CourseReminderManager(context, repository)
     }
 }
 

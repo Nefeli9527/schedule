@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -24,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import top.nefeli.schedule.view.components.WeekSelector
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeekSelectionDialog(
     totalWeeks: Int,
@@ -71,9 +71,9 @@ fun TimeSelectionDialog(
     onConfirm: (Int, Int, Int) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var currentDay by remember { mutableStateOf(selectedDay) }
-    var currentPeriod by remember { mutableStateOf(selectedPeriod) }
-    var currentEndPeriod by remember { mutableStateOf(endPeriod) }
+    var currentDay by remember { mutableIntStateOf(selectedDay) }
+    var currentPeriod by remember { mutableIntStateOf(selectedPeriod) }
+    var currentEndPeriod by remember { mutableIntStateOf(endPeriod) }
     
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -185,7 +185,6 @@ fun TimeSelectionDialog(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeacherInputDialog(
     initialTeacher: String,
@@ -224,7 +223,6 @@ fun TeacherInputDialog(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationInputDialog(
     initialLocation: String,

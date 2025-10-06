@@ -1,8 +1,5 @@
 package top.nefeli.schedule.util
 
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -15,21 +12,17 @@ import java.util.Scanner
 
 class ScheduleImporter {
     companion object {
-        private const val TAG = "ScheduleImporter"
         
-        @RequiresApi(Build.VERSION_CODES.O)
         fun importScheduleFromFile(file: File): ImportResult {
             return try {
                 val content = Scanner(FileInputStream(file), "UTF-8").useDelimiter("\\A").next()
                 val result = parseScheduleFile(content)
                 result
             } catch (e: Exception) {
-                Log.e(TAG, "Error importing schedule", e)
                 ImportResult.Error("导入失败: ${e.message}")
             }
         }
         
-        @RequiresApi(Build.VERSION_CODES.O)
         private fun parseScheduleFile(content: String): ImportResult {
             try {
                 val lines = content.lines()
@@ -87,12 +80,10 @@ class ScheduleImporter {
                 
                 return ImportResult.Success(settings, scheduleData)
             } catch (e: Exception) {
-                Log.e(TAG, "Error parsing schedule file", e)
                 return ImportResult.Error("解析文件失败: ${e.message}")
             }
         }
         
-        @RequiresApi(Build.VERSION_CODES.O)
         private fun convertToSettings(
             startDateStr: String?,
             maxWeek: Int?,
@@ -112,7 +103,6 @@ class ScheduleImporter {
                     LocalDate.now().minusYears(1)
                 }
             } catch (e: Exception) {
-                Log.w(TAG, "Invalid start date, using default", e)
                 LocalDate.now().minusYears(1)
             }
             
@@ -146,7 +136,7 @@ class ScheduleImporter {
                     
                     scheduleData.add(course)
                 } catch (e: Exception) {
-                    Log.w(TAG, "Error converting course: ${wakeupCourse.courseName}", e)
+                    // 忽略转换错误
                 }
             }
             

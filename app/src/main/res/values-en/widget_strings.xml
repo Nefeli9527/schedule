@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recent_course">Recent Course</string>
+    <string name="no_course">No Course</string>
+    <string name="appwidget_description">Display the most recent course</string>
+</resources>

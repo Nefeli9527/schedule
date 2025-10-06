@@ -25,13 +25,15 @@
     <string name="periods_per_day">Periods Per Day</string>
     <string name="periods_per_day_desc">Set the total number of periods per day</string>
     <string name="show_weekends">Show Weekends</string>
-    <string name="show_weekends_desc">Show Saturday and Sunday in the schedule</string>
+    <string name="show_weekends_desc">Whether to show Saturday and Sunday in the schedule</string>
     <string name="total_weeks">Total Weeks</string>
-    <string name="total_weeks_desc">Total number of weeks in the semester</string>
+    <string name="total_weeks_desc">Total weeks of the semester</string>
     <string name="enable_week_navigation">Enable Week Navigation</string>
-    <string name="enable_week_navigation_desc">Allow viewing other weeks\' schedules</string>
+    <string name="enable_week_navigation_desc">Allow viewing course arrangements for other weeks</string>
     <string name="double_back_to_exit">Double Back to Exit</string>
-    <string name="double_back_to_exit_desc">Press back twice to exit the app</string>
+    <string name="double_back_to_exit_desc">Press back button twice to exit the app</string>
+    <string name="do_not_disturb_mode">Do Not Disturb Mode</string>
+    <string name="do_not_disturb_mode_desc">Automatically enable Do Not Disturb mode during class</string>
     <string name="semester_start_date">Semester Start Date</string>
     <string name="semester_start_date_desc">Semester start date: %s</string>
     <string name="select">Select</string>
@@ -55,7 +57,7 @@
     <string name="saturday">Sat</string>
     <string name="sunday">Sun</string>
     <string name="selected_weeks_count">%d weeks selected</string>
-    <string name="date_format">%d/%d</string>
+    <string name="date_format" formatted="false">%d/%d</string>
     <string name="exit_prompt">Press back again to exit</string>
     <string name="debug_mode_enabled">Debug mode enabled</string>
 
@@ -74,11 +76,11 @@
     <string name="quick_setup">Quick Setup</string>
     <string name="active_timetable">Active Timetable</string>
     <string name="sub_timetables">Sub Timetables</string>
-    <string name="period_schedule">%s\'s Period Schedule</string>
+    <string name="period_schedule">%s Class Schedule</string>
     <string name="period_number">%d</string>
     <string name="active">Active</string>
     <string name="period_count">%d periods</string>
-    <string name="quick_setup_description">Automatically assign class times, 4 in the morning, 4 in the afternoon, and 1 in the evening</string>
+    <string name="quick_setup_description">Automatically assign class times, 4 in the morning, 4 in the afternoon, 1 in the evening</string>
     <string name="morning_start_time">Morning Start Time</string>
     <string name="afternoon_start_time">Afternoon Start Time</string>
     <string name="evening_start_time">Evening Start Time</string>
@@ -94,14 +96,14 @@
     <string name="none">None</string>
     <string name="switch_date">Switch Date</string>
     <string name="change">Change</string>
-    <string name="break_periods_example">Example: 2,4 (long breaks after period 2 and 4)</string>
+    <string name="break_periods_example">Example: 2,4 (means long breaks after period 2 and 4)</string>
 
     <!-- Reset Timetable -->
     <string name="reset_timetable">Reset Timetable</string>
     <string name="reset_timetable_confirm_message">Are you sure you want to reset this timetable? This will delete all courses and schedules in this timetable.</string>
 
     <!-- Period Management -->
-    <string name="period_management_desc">Manage the作息 time arrangements for courses</string>
+    <string name="period_management_desc">Manage class schedule arrangements</string>
     <string name="period_name">Period Name</string>
     <string name="start_time">Start Time</string>
     <string name="end_time">End Time</string>
@@ -111,8 +113,8 @@
     <string name="edit_period">Edit Period</string>
     <string name="delete_period">Delete Period</string>
     <string name="confirm_delete">Confirm Delete</string>
-    <string name="confirm_delete_period">Are you sure you want to delete the period "%s"?</string>
-    <string name="no_periods_yet">No作息 time arrangements yet</string>
+    <string name="confirm_delete_period">Are you sure you want to delete period "%s"?</string>
+    <string name="no_periods_yet">No schedule arrangements yet</string>
     <string name="add">Add</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>

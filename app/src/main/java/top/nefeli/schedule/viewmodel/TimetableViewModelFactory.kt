@@ -6,9 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 /**
  * TimetableViewModel 工厂类
  */
-class TimetableViewModelFactory(
-    // private val timetableRepository: TimetableRepository
-) : ViewModelProvider.Factory {
+class TimetableViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TimetableViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

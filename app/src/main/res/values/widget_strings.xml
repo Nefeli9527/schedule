@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recent_course">最近课程</string>
+    <string name="no_course">暂无课程</string>
+    <string name="appwidget_description">显示最近的一节课</string>
+</resources>

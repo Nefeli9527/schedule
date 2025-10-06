@@ -13,9 +13,7 @@ import java.time.LocalTime
  * 时间表 ViewModel
  * 负责管理时间表配置的业务逻辑
  */
-class TimetableViewModel(
-    // private val timetableRepository: TimetableRepository
-) : ViewModel() {
+class TimetableViewModel : ViewModel() {
     
     private val _uiState = MutableStateFlow(TimetableUiState())
     val uiState: StateFlow<TimetableUiState> = _uiState.asStateFlow()

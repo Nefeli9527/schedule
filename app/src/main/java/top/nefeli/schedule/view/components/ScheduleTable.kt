@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -104,13 +105,22 @@ fun ScheduleTable(
             .padding(horizontal = 16.dp)
     ) {
         val currentDate = LocalDate.now()
-        
-        val daysBetween = ChronoUnit.DAYS.between(settings.semesterStartDate, currentDate)
-        val calculatedWeekNumber = if (daysBetween >= 0) (daysBetween / 7).toInt() + 1 else 1
-        val currentWeekNumber = when {
-            calculatedWeekNumber < 1 -> 1
-            calculatedWeekNumber > settings.totalWeeks -> settings.totalWeeks
-            else -> calculatedWeekNumber
+
+        // 将周数计算移到LaunchedEffect中，确保settings加载完成后再计算
+        var currentWeekNumber by remember { mutableIntStateOf(1) }
+        var daysBetween by remember { mutableLongStateOf(0L) }
+        var calculatedWeekNumber by remember { mutableIntStateOf(1) }
+
+        LaunchedEffect(settings.semesterStartDate, settings.totalWeeks, currentDate) {
+            if (settings.semesterStartDate != LocalDate.MIN) {
+                daysBetween = ChronoUnit.DAYS.between(settings.semesterStartDate, currentDate)
+                calculatedWeekNumber = if (daysBetween >= 0) (daysBetween / 7).toInt() + 1 else 1
+                currentWeekNumber = when {
+                    calculatedWeekNumber < 1 -> 1
+                    calculatedWeekNumber > settings.totalWeeks -> settings.totalWeeks
+                    else -> calculatedWeekNumber
+                }
+            }
         }
 
         val selectedWeek by remember { mutableIntStateOf(currentWeekNumber) }
@@ -120,9 +130,8 @@ fun ScheduleTable(
         var showDatePicker by remember { mutableStateOf(false) }
         var actualSelectedWeek by remember { mutableIntStateOf(selectedWeek) }
 
-        val displaySchedule = remember(courses, schedules, teachers, locations, selectedWeek, actualSelectedWeek) {
-
-            
+        val displaySchedule =
+            remember(courses, schedules, teachers, locations, actualSelectedWeek, settings) {
             val result = createDisplaySchedule(
                 courses,
                 schedules,
@@ -240,7 +249,7 @@ fun ScheduleTable(
 //        }
         
         var userSelectedWeek by remember { mutableStateOf<Int?>(null) }
-        actualSelectedWeek = userSelectedWeek ?: selectedWeek
+        actualSelectedWeek = userSelectedWeek ?: currentWeekNumber
 
 
         if (settings.enableWeekNavigation) {
@@ -253,13 +262,10 @@ fun ScheduleTable(
             ) {
                 IconButton(
                     onClick = {
-                        val newWeek = (userSelectedWeek ?: selectedWeek) - 1
+                        val newWeek = (userSelectedWeek ?: currentWeekNumber) - 1
                         userSelectedWeek = newWeek
-//                        if (userSelectedWeek == null) {
-//                            selectedWeek = newWeek
-//                        }
                     },
-                    enabled = (userSelectedWeek ?: selectedWeek) > 1
+                    enabled = (userSelectedWeek ?: currentWeekNumber) > 1
                 ) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
@@ -277,13 +283,10 @@ fun ScheduleTable(
 
                 IconButton(
                     onClick = {
-                        val newWeek = (userSelectedWeek ?: selectedWeek) + 1
+                        val newWeek = (userSelectedWeek ?: currentWeekNumber) + 1
                         userSelectedWeek = newWeek
-//                        if (userSelectedWeek == null) {
-//                            selectedWeek = newWeek
-//                        }
                     },
-                    enabled = (userSelectedWeek ?: selectedWeek) < settings.totalWeeks
+                    enabled = (userSelectedWeek ?: currentWeekNumber) < settings.totalWeeks
                 ) {
                     Icon(
                         imageVector = Icons.Filled.ArrowForward,
@@ -293,7 +296,7 @@ fun ScheduleTable(
             }
         } else {
             Text(
-                text = stringResource(R.string.week_number, selectedWeek),
+                text = stringResource(R.string.week_number, currentWeekNumber),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),

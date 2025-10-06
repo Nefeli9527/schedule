@@ -30,7 +30,6 @@ import top.nefeli.schedule.model.Period
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PeriodInputDialog(
     period: Period,
@@ -38,7 +37,7 @@ fun PeriodInputDialog(
     onConfirm: (Period) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    var name by remember { mutableStateOf(period.name) }
+    val name by remember { mutableStateOf(period.name) }
     var startTime by remember { mutableStateOf(period.startTime) }
     var endTime by remember { mutableStateOf(period.endTime) }
     var periodType by remember { mutableStateOf(period.periodType) }

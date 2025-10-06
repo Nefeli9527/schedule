@@ -1,7 +1,6 @@
 package top.nefeli.schedule.view.screens
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -69,7 +68,7 @@ fun AddCourseScreen(
 
     var csi by remember { mutableStateOf(mutableListOf<CourseScheduleInfo>()) }
     // 修复：使用 mutableStateOf 并添加 setter 来触发重组
-    var index by remember { mutableStateOf(csi.size) }
+    var index by remember { mutableIntStateOf(csi.size) }
 
 //    var selectedDay by remember { mutableIntStateOf(1) }
 //    var selectedStartPeriod by remember { mutableIntStateOf(1) }
@@ -90,70 +89,56 @@ fun AddCourseScreen(
     var existingCourseId by remember { mutableStateOf<Long?>(null) }
 
     // 提取的更新函数，用于更新数据库中的课程时间安排
-    val updateScheduleInDatabase: (Int) -> Unit = { index ->
-        Log.d("AddCourseScreen", "Updating schedule in database at index: $index")
-        Log.d("AddCourseScreen", "Schedule info: ${csi[index]}")
+    val updateScheduleInDatabase: (Int) -> Unit = { indexParam ->
+        fun updateSchedule(index: Int) {
+            // 检查索引是否有效
+            if (index < 0 || index >= csi.size) {
+                return
+            }
 
-        // 确保外键引用有效
-        var locationId = csi[index].locationId
-        if (locationId <= 0) {
-            val locations = viewModel.findAllLocations()
-            locationId = if (locations.isNotEmpty()) locations[0].id else 1
-            Log.d("AddCourseScreen", "Fixed locationId to: $locationId")
+            // 确保外键引用有效
+            var locationId = csi[index].locationId
+            if (locationId <= 0) {
+                val locations = viewModel.findAllLocations()
+                locationId = if (locations.isNotEmpty()) locations[0].id else 1
+            }
+
+            var teacherId = csi[index].teacherId
+            if (teacherId <= 0) {
+                val teachers = viewModel.findAllTeachers()
+                teacherId = if (teachers.isNotEmpty()) teachers[0].id else 1
+            }
+
+            // 获取当前课程的ID
+            val courseId = existingCourseId ?: (initialCourse?.id ?: 0)
+
+            // 使用 CourseScheduleInfo 的 toSchedule 方法创建 Schedule 对象
+            val scheduleToUpdate = csi[index].copy(
+                courseId = courseId,
+                locationId = locationId,
+                teacherId = teacherId
+            ).toSchedule()
+
+            // 调用ViewModel的方法来更新记录
+            viewModel.updateSchedule(scheduleToUpdate)
         }
 
-        var teacherId = csi[index].teacherId
-        if (teacherId <= 0) {
-            val teachers = viewModel.findAllTeachers()
-            teacherId = if (teachers.isNotEmpty()) teachers[0].id else 1
-            Log.d("AddCourseScreen", "Fixed teacherId to: $teacherId")
-        }
-
-        // 获取当前课程的ID
-        val courseId = existingCourseId ?: (initialCourse?.id ?: 0)
-        Log.d("AddCourseScreen", "Using courseId: $courseId")
-
-        // 使用 CourseScheduleInfo 的 toSchedule 方法创建 Schedule 对象
-        val scheduleToUpdate = csi[index].copy(
-            courseId = courseId,
-            locationId = locationId,
-            teacherId = teacherId
-        ).toSchedule()
-
-        Log.d("AddCourseScreen", "Schedule to update: $scheduleToUpdate")
-        // 调用ViewModel的方法来更新记录
-        viewModel.updateSchedule(scheduleToUpdate)
-        Log.d("AddCourseScreen", "Schedule updated successfully")
+        updateSchedule(indexParam)
     }
 
     // 保存课程和时间安排的函数
     val saveCourseAndSchedules = {
-        Log.d("AddCourseScreen", "saveCourseAndSchedules called")
-        Log.d("AddCourseScreen", "Course name: $courseName")
-        Log.d("AddCourseScreen", "Existing course ID: $existingCourseId")
-        Log.d("AddCourseScreen", "Timetable ID: $timetableId")
-        Log.d("AddCourseScreen", "CSI size: ${csi.size}")
-        
         // 收集所有有效的课程时间安排
         val validSchedules = mutableListOf<Schedule>()
 
         for (i in 0 until csi.size) {
-            Log.d("AddCourseScreen", "Processing schedule $i: ${csi[i]}")
             if (csi[i].weeks.isNotEmpty()) {
                 // 确保地点和教师存在
                 var locationId = csi[i].locationId
                 if (locationId <= 0) {
-                    Log.d(
-                        "AddCourseScreen",
-                        "Location ID is invalid, looking up or creating location"
-                    )
                     // 检查地点是否已存在
                     val existingLocation = viewModel.findLocationByInfo(csi[i].location)
                     locationId = if (existingLocation != null) {
-                        Log.d(
-                            "AddCourseScreen",
-                            "Found existing location with ID: ${existingLocation.id}"
-                        )
                         existingLocation.id
                     } else {
                         // 地点不存在，创建新记录
@@ -161,7 +146,6 @@ fun AddCourseScreen(
                         // 重新查询获取ID（在实际应用中应通过返回值获取）
                         val newLocationId =
                             viewModel.findLocationByInfo(csi[i].location)?.id ?: 1 // 使用默认ID 1
-                        Log.d("AddCourseScreen", "Created new location with ID: $newLocationId")
                         newLocationId
                     }
                     csi[i].locationId = locationId
@@ -169,17 +153,9 @@ fun AddCourseScreen(
 
                 var teacherId = csi[i].teacherId
                 if (teacherId <= 0) {
-                    Log.d(
-                        "AddCourseScreen",
-                        "Teacher ID is invalid, looking up or creating teacher"
-                    )
                     // 检查教师是否已存在
                     val existingTeacher = viewModel.findTeacherByName(csi[i].teacher)
                     teacherId = if (existingTeacher != null) {
-                        Log.d(
-                            "AddCourseScreen",
-                            "Found existing teacher with ID: ${existingTeacher.id}"
-                        )
                         existingTeacher.id
                     } else {
                         // 教师不存在，创建新记录
@@ -187,7 +163,6 @@ fun AddCourseScreen(
                         // 重新查询获取ID（在实际应用中应通过返回值获取）
                         val newTeacherId =
                             viewModel.findTeacherByName(csi[i].teacher)?.id ?: 1 // 使用默认ID 1
-                        Log.d("AddCourseScreen", "Created new teacher with ID: $newTeacherId")
                         newTeacherId
                     }
                     csi[i].teacherId = teacherId
@@ -195,7 +170,6 @@ fun AddCourseScreen(
 
                 // 获取课程ID
                 val courseId = existingCourseId ?: timetableId
-                Log.d("AddCourseScreen", "Using course ID: $courseId")
 
                 // 使用 CourseScheduleInfo 的 toSchedule 方法创建 Schedule 对象
                 val newSchedule = csi[i].copy(
@@ -205,13 +179,9 @@ fun AddCourseScreen(
                 ).toSchedule().apply {
                     id = csi[i].id  // 保留原有的ID
                 }
-                Log.d("AddCourseScreen", "Adding valid schedule: $newSchedule")
                 validSchedules.add(newSchedule)
-            } else {
-                Log.d("AddCourseScreen", "Schedule $i has no weeks selected, skipping")
             }
         }
-        Log.d("AddCourseScreen", "Total valid schedules: ${validSchedules.size}")
 
         // 只有当有有效数据且timetableId有效时才添加课程
         if (courseName.isNotBlank() && validSchedules.isNotEmpty() && timetableId > 0) {
@@ -223,17 +193,10 @@ fun AddCourseScreen(
                 note = note,
                 timetableId = timetableId
             )
-            Log.d("AddCourseScreen", "Creating course: $course")
 
-            Log.d("AddCourseScreen", "Calling onAddCourse with ${validSchedules.size} schedules")
             // 只调用一次回调
             onAddCourse(course, validSchedules.toList())
             onBack()
-        } else {
-            Log.d(
-                "AddCourseScreen", "Not creating course - name blank: ${courseName.isBlank()}, " +
-                        "no valid schedules: ${validSchedules.isEmpty()}, timetableId invalid: ${timetableId <= 0}"
-            )
         }
     }
 
@@ -253,10 +216,6 @@ fun AddCourseScreen(
                 existingCourseId = existingCourse.id
                 // 填充课程时间表信息
                 val courseSchedules = viewModel.findSchedulesByCourse(existingCourse.id)
-                Log.d(
-                    "AddCourseScreen",
-                    "Found ${courseSchedules.size} existing schedules for course ${existingCourse.name}"
-                )
                 csi = courseSchedules.map { schedule ->
                     val teacher = viewModel.findTeacherById(schedule.teacherId)
                     val location = viewModel.findLocationById(schedule.locationId)
@@ -264,7 +223,6 @@ fun AddCourseScreen(
                         this.teacher = teacher?.name ?: ""
                         this.location = location ?: Location()
                     }
-                    Log.d("AddCourseScreen", "Mapped schedule info: $info")
                     info
                 }.toMutableList()
                 // 更新index以触发重组
@@ -319,39 +277,26 @@ fun AddCourseScreen(
                 FloatingActionButton(
                     onClick = {
                         // 添加新的课程时间安排并更新 index 以触发重组
-                        Log.d("AddCourseScreen", "Adding new schedule, current count: ${csi.size}")
                         // 如果csi不为空，复制最后一个CourseScheduleInfo，否则创建新的
                         val newScheduleInfo = if (csi.isNotEmpty()) {
-                            Log.d("AddCourseScreen", "Copying last schedule info")
                             csi.last().copy()
                         } else {
-                            Log.d("AddCourseScreen", "Creating new schedule info")
                             CourseScheduleInfo(existingCourseId ?: -1)
                         }
                         // 确保新添加的安排ID为-1，表示是新的安排
                         newScheduleInfo.id = -1
                         csi.add(newScheduleInfo)
                         index = csi.size
-                        Log.d("AddCourseScreen", "New schedule added, new count: ${csi.size}")
 
                         // 如果是编辑现有课程，立即保存新添加的时间安排到数据库
                         if (initialCourse != null && existingCourseId != null) {
-                            Log.d("AddCourseScreen", "Adding schedule to existing course")
                             // 确保地点和教师存在
                             var locationId = newScheduleInfo.locationId
                             if (locationId <= 0) {
-                                Log.d(
-                                    "AddCourseScreen",
-                                    "Location ID is invalid, looking up or creating location"
-                                )
                                 // 检查地点是否已存在
                                 val existingLocation =
                                     viewModel.findLocationByInfo(newScheduleInfo.location)
                                 locationId = if (existingLocation != null) {
-                                    Log.d(
-                                        "AddCourseScreen",
-                                        "Found existing location with ID: ${existingLocation.id}"
-                                    )
                                     existingLocation.id
                                 } else {
                                     // 地点不存在，创建新记录
@@ -360,10 +305,6 @@ fun AddCourseScreen(
                                     val newLocationId =
                                         viewModel.findLocationByInfo(newScheduleInfo.location)?.id
                                             ?: 1
-                                    Log.d(
-                                        "AddCourseScreen",
-                                        "Created new location with ID: $newLocationId"
-                                    )
                                     newLocationId
                                 }
                                 newScheduleInfo.locationId = locationId
@@ -371,18 +312,10 @@ fun AddCourseScreen(
 
                             var teacherId = newScheduleInfo.teacherId
                             if (teacherId <= 0) {
-                                Log.d(
-                                    "AddCourseScreen",
-                                    "Teacher ID is invalid, looking up or creating teacher"
-                                )
                                 // 检查教师是否已存在
                                 val existingTeacher =
                                     viewModel.findTeacherByName(newScheduleInfo.teacher)
                                 teacherId = if (existingTeacher != null) {
-                                    Log.d(
-                                        "AddCourseScreen",
-                                        "Found existing teacher with ID: ${existingTeacher.id}"
-                                    )
                                     existingTeacher.id
                                 } else {
                                     // 教师不存在，创建新记录
@@ -391,10 +324,6 @@ fun AddCourseScreen(
                                     val newTeacherId =
                                         viewModel.findTeacherByName(newScheduleInfo.teacher)?.id
                                             ?: 1
-                                    Log.d(
-                                        "AddCourseScreen",
-                                        "Created new teacher with ID: $newTeacherId"
-                                    )
                                     newTeacherId
                                 }
                                 newScheduleInfo.teacherId = teacherId
@@ -407,12 +336,10 @@ fun AddCourseScreen(
                                 teacherId = teacherId
                             ).toSchedule()
 
-                            Log.d("AddCourseScreen", "Adding schedule to database: $scheduleToAdd")
                             // 保存到数据库
                             viewModel.addSchedule(scheduleToAdd)
                             // 注意：由于在Composable中无法获取返回的ID，我们无法更新newScheduleInfo.id
                             // 但在实时更新的场景中，这不会造成太大问题
-                            Log.d("AddCourseScreen", "Schedule added to database")
                         }
                     }
                 ) {
@@ -465,7 +392,6 @@ fun AddCourseScreen(
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-                Log.d("","index:$index")
 
                 // 修复：始终确保至少有一个课程时间安排
                 if (csi.isEmpty()) {
@@ -474,7 +400,6 @@ fun AddCourseScreen(
                 }
 
                 for (i in 0 until csi.size) {
-                    Log.d("AddCourseScreen", "Rendering schedule $i: ${csi[i]}")
                     EditableCourseSchedule(
                         day = csi[i].dayOfWeek,
                         period = csi[i].startPeriod,
@@ -501,26 +426,17 @@ fun AddCourseScreen(
                         onDelete = {
                             // 如果是已有记录（id > 0），需要从数据库中删除
                             if (csi[i].id > 0) {
-                                Log.d(
-                                    "AddCourseScreen",
-                                    "Deleting schedule from database, ID: ${csi[i].id}"
-                                )
                                 // 创建一个Schedule对象用于删除
                                 val scheduleToDelete = csi[i].toSchedule().apply {
                                     id = csi[i].id
                                 }
                                 // 调用ViewModel的方法来删除记录
                                 viewModel.deleteSchedule(scheduleToDelete)
-                                Log.d("AddCourseScreen", "Schedule deleted from database")
                             }
                             // 修复：正确地从 csi 中移除元素
                             csi.removeAt(i)
                             // 更新 index 以触发重组
                             index = csi.size
-                            Log.d(
-                                "AddCourseScreen",
-                                "Deleted schedule at index $i, new size: ${csi.size}"
-                            )
                         },
                         id = csi[i].id
                     )

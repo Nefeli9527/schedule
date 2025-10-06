@@ -1,6 +1,9 @@
 package top.nefeli.schedule.view.screens
 
 import android.app.DatePickerDialog
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,7 +33,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -55,13 +57,14 @@ fun SettingsScreen(
     val settingsViewModel: SettingsViewModel = viewModel(factory = settingsViewModelFactory)
     val settings by settingsViewModel.settings.collectAsState()
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
+//    val coroutineScope = rememberCoroutineScope()
 
     var numberOfPeriods by remember { mutableStateOf(settings.numberOfPeriods.toString()) }
     var showWeekends by remember { mutableStateOf(settings.showWeekends) }
     var totalWeeks by remember { mutableStateOf(settings.totalWeeks.toString()) }
     var enableWeekNavigation by remember { mutableStateOf(settings.enableWeekNavigation) }
     var doubleBackToExit by remember { mutableStateOf(settings.doubleBackToExit) }
+    var doNotDisturbEnabled by remember { mutableStateOf(settings.doNotDisturbEnabled) }
     var semesterStartDate by remember { mutableStateOf(settings.semesterStartDate) }
     var showDatePicker by remember { mutableStateOf(false) }
 
@@ -72,6 +75,7 @@ fun SettingsScreen(
         totalWeeks = settings.totalWeeks.toString()
         enableWeekNavigation = settings.enableWeekNavigation
         doubleBackToExit = settings.doubleBackToExit
+        doNotDisturbEnabled = settings.doNotDisturbEnabled
         semesterStartDate = settings.semesterStartDate
     }
 
@@ -90,7 +94,8 @@ fun SettingsScreen(
                         semesterStartDate = semesterStartDate,
                         totalWeeks = totalWeeks.toIntOrNull() ?: 22,
                         enableWeekNavigation = enableWeekNavigation,
-                        doubleBackToExit = doubleBackToExit
+                        doubleBackToExit = doubleBackToExit,
+                        doNotDisturbEnabled = doNotDisturbEnabled
                     )
                 )
             },
@@ -115,7 +120,7 @@ fun SettingsScreen(
                 }
             )
         }
-    ) { paddingValues ->
+    ) { paddingValues -> 
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -147,7 +152,8 @@ fun SettingsScreen(
                                             semesterStartDate = semesterStartDate,
                                             totalWeeks = totalWeeks.toIntOrNull() ?: 22,
                                             enableWeekNavigation = enableWeekNavigation,
-                                            doubleBackToExit = doubleBackToExit
+                                            doubleBackToExit = doubleBackToExit,
+                                            doNotDisturbEnabled = doNotDisturbEnabled
                                         )
                                     )
                                 },
@@ -174,7 +180,8 @@ fun SettingsScreen(
                                             semesterStartDate = semesterStartDate,
                                             totalWeeks = totalWeeks.toIntOrNull() ?: 22,
                                             enableWeekNavigation = enableWeekNavigation,
-                                            doubleBackToExit = doubleBackToExit
+                                            doubleBackToExit = doubleBackToExit,
+                                            doNotDisturbEnabled = doNotDisturbEnabled
                                         )
                                     )
                                 }
@@ -199,7 +206,8 @@ fun SettingsScreen(
                                             semesterStartDate = semesterStartDate,
                                             totalWeeks = it.toIntOrNull() ?: 22,
                                             enableWeekNavigation = enableWeekNavigation,
-                                            doubleBackToExit = doubleBackToExit
+                                            doubleBackToExit = doubleBackToExit,
+                                            doNotDisturbEnabled = doNotDisturbEnabled
                                         )
                                     )
                                 },
@@ -226,7 +234,8 @@ fun SettingsScreen(
                                             semesterStartDate = semesterStartDate,
                                             totalWeeks = totalWeeks.toIntOrNull() ?: 22,
                                             enableWeekNavigation = enableWeekNavigation,
-                                            doubleBackToExit = doubleBackToExit
+                                            doubleBackToExit = doubleBackToExit,
+                                            doNotDisturbEnabled = doNotDisturbEnabled
                                         )
                                     )
                                 }
@@ -262,6 +271,48 @@ fun SettingsScreen(
             ) {
                 Column {
                     ListItem(
+                        headlineContent = { Text(stringResource(R.string.do_not_disturb_mode)) },
+                        supportingContent = { Text(stringResource(R.string.do_not_disturb_mode_desc)) },
+                        trailingContent = {
+                            Switch(
+                                checked = doNotDisturbEnabled,
+                                onCheckedChange = { checked ->
+                                    // 如果用户开启了勿扰模式，检查权限
+                                    if (checked) {
+                                        // 检查是否已有权限
+                                        val notificationManager =
+                                            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                                        val hasDoNotDisturbPermission =
+                                            notificationManager.isNotificationPolicyAccessGranted
+
+                                        // 只有在没有权限时才跳转到设置页面
+                                        if (!hasDoNotDisturbPermission) {
+                                            val intent =
+                                                Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+                                            context.startActivity(intent)
+                                        }
+                                    }
+
+                                    doNotDisturbEnabled = checked
+                                    // 立即保存更改
+                                    saveSettings(
+                                        settingsViewModel,
+                                        Settings(
+                                            numberOfPeriods = numberOfPeriods.toIntOrNull() ?: 9,
+                                            showWeekends = showWeekends,
+                                            semesterStartDate = semesterStartDate,
+                                            totalWeeks = totalWeeks.toIntOrNull() ?: 22,
+                                            enableWeekNavigation = enableWeekNavigation,
+                                            doubleBackToExit = doubleBackToExit,
+                                            doNotDisturbEnabled = doNotDisturbEnabled
+                                        )
+                                    )
+                                }
+                            )
+                        }
+                    )
+                    
+                    ListItem(
                         headlineContent = { Text(stringResource(R.string.double_back_to_exit)) },
                         supportingContent = { Text(stringResource(R.string.double_back_to_exit_desc)) },
                         trailingContent = {
@@ -278,7 +329,8 @@ fun SettingsScreen(
                                             semesterStartDate = semesterStartDate,
                                             totalWeeks = totalWeeks.toIntOrNull() ?: 22,
                                             enableWeekNavigation = enableWeekNavigation,
-                                            doubleBackToExit = doubleBackToExit
+                                            doubleBackToExit = doubleBackToExit,
+                                            doNotDisturbEnabled = doNotDisturbEnabled
                                         )
                                     )
                                 }

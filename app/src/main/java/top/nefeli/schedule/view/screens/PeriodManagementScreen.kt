@@ -207,7 +207,6 @@ fun PeriodsListView(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PeriodItem(
     period: Period,

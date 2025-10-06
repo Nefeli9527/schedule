@@ -2,6 +2,8 @@
 package top.nefeli.schedule.view.utils
 
 import androidx.compose.ui.graphics.Color
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 // 预设的颜色列表，使用 Material You 动态颜色
 private val courseColors = listOf(
@@ -44,22 +46,22 @@ fun getCourseColor(courseName: String): Color {
     return color
 }
 
-//fun getDayOfWeek(day: Int): String {
-//    return when (day) {
-//        1 -> "一"
-//        2 -> "二"
-//        3 -> "三"
-//        4 -> "四"
-//        5 -> "五"
-//        6 -> "六"
-//        7 -> "日"
-//        else -> ""
-//    }
-//}
-
 // 判断颜色是否为深色的辅助函数
 fun isDarkColor(color: Color): Boolean {
     // 使用相对亮度公式判断颜色深浅
     val brightness = (color.red * 299 + color.green * 587 + color.blue * 114) / 1000
     return brightness < 0.5
+}
+
+/**
+ * 根据学期开始日期计算周数
+ * @param date 要计算的日期
+ * @param semesterStartDate 学期开始日期
+ * @return 周数（从1开始）
+ */
+fun getWeekNumber(date: LocalDate, semesterStartDate: LocalDate): Int {
+    // 计算两个日期之间相隔的周数
+    val weeksBetween = ChronoUnit.WEEKS.between(semesterStartDate, date)
+    // 周数从1开始计算
+    return (weeksBetween + 1).toInt()
 }

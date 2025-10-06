@@ -23,6 +23,8 @@ class ScheduleRepository(context: Context) {
     private val adjustmentPreferences: android.content.SharedPreferences = 
         context.getSharedPreferences("adjustment_data", Context.MODE_PRIVATE)
 
+    companion object;
+
     /**
      * 获取所有课表
      */
@@ -77,10 +79,23 @@ class ScheduleRepository(context: Context) {
     }
 
     /**
+     * 根据ID获取课程
+     *
+     * @param id 课程ID
+     * @return 课程对象，如果不存在则返回null
+     */
+    suspend fun getCourseById(id: Long): Course? {
+        return courseDao.getCourseById(id)
+    }
+
+    /**
      * 添加课程到课表
      */
     suspend fun addCourse(course: Course): Long {
-        return courseDao.insertCourse(course)
+        val result = courseDao.insertCourse(course)
+        // 通知小组件更新
+        notifyWidgetUpdate()
+        return result
     }
 
     /**
@@ -88,6 +103,8 @@ class ScheduleRepository(context: Context) {
      */
     suspend fun updateCourse(course: Course) {
         courseDao.updateCourse(course)
+        // 通知小组件更新
+        notifyWidgetUpdate()
     }
 
     /**
@@ -95,6 +112,8 @@ class ScheduleRepository(context: Context) {
      */
     suspend fun deleteCourse(course: Course) {
         courseDao.deleteCourse(course)
+        // 通知小组件更新
+        notifyWidgetUpdate()
     }
 
     /**
@@ -115,7 +134,10 @@ class ScheduleRepository(context: Context) {
      * 添加时间安排
      */
     suspend fun addSchedule(schedule: Schedule): Long {
-        return courseDao.insertSchedule(schedule)
+        val result = courseDao.insertSchedule(schedule)
+        // 通知小组件更新
+        notifyWidgetUpdate()
+        return result
     }
 
     /**
@@ -123,6 +145,8 @@ class ScheduleRepository(context: Context) {
      */
     suspend fun updateSchedule(schedule: Schedule) {
         courseDao.updateSchedule(schedule)
+        // 通知小组件更新
+        notifyWidgetUpdate()
     }
 
     /**
@@ -130,6 +154,8 @@ class ScheduleRepository(context: Context) {
      */
     suspend fun deleteSchedule(schedule: Schedule) {
         courseDao.deleteSchedule(schedule)
+        // 通知小组件更新
+        notifyWidgetUpdate()
     }
 
     /**
@@ -364,7 +390,9 @@ class ScheduleRepository(context: Context) {
     suspend fun initializeDefaultPeriods() {
         // 检查是否已存在节次时间表数据
         val existingPeriods = courseDao.getAllPeriods().first()
-        if (existingPeriods.isNotEmpty()) return // 如果已有数据，则不初始化
+        if (existingPeriods.isNotEmpty()) {
+            return // 如果已有数据，则不初始化
+        }
 
         // 使用Period类中的默认节次时间表
         val defaultPeriods = Period.createDefaultPeriods()
@@ -389,6 +417,14 @@ class ScheduleRepository(context: Context) {
             classId = "默认班级",
             note = "系统自动创建的默认课表"
         )
-        return courseDao.insertTimetable(defaultTimetable)
+        val timetableId = courseDao.insertTimetable(defaultTimetable)
+        return timetableId
+    }
+
+    /**
+     * 通知小组件更新
+     */
+    private fun notifyWidgetUpdate() {
+        // 这里我们只是记录日志，实际的更新逻辑在ViewModel中实现
     }
 }

@@ -32,6 +32,8 @@
     <string name="enable_week_navigation_desc">允许查看其他周的课程安排</string>
     <string name="double_back_to_exit">双击返回退出</string>
     <string name="double_back_to_exit_desc">开启后需要按两次返回键才能退出应用</string>
+    <string name="do_not_disturb_mode">上课勿扰模式</string>
+    <string name="do_not_disturb_mode_desc">在上课期间自动开启勿扰模式</string>
     <string name="semester_start_date">开学日期</string>
     <string name="semester_start_date_desc">学期开始日期: %s</string>
     <string name="select">选择</string>
@@ -55,7 +57,7 @@
     <string name="saturday">六</string>
     <string name="sunday">日</string>
     <string name="selected_weeks_count">已选中%d周</string>
-    <string name="date_format">%d/%d</string>
+    <string name="date_format" formatted="false">%d/%d</string>
     <string name="exit_prompt">再按一次退出应用</string>
     <string name="debug_mode_enabled">调试模式已开启</string>
 

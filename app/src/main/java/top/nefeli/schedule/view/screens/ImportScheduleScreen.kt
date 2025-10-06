@@ -1,10 +1,8 @@
 package top.nefeli.schedule.view.screens
 
 import android.net.Uri
-import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -45,14 +43,12 @@ import kotlinx.coroutines.launch
 import top.nefeli.schedule.R
 import top.nefeli.schedule.util.ImportResult
 import top.nefeli.schedule.util.ScheduleImporter
-import top.nefeli.schedule.viewmodel.ScheduleViewModel
 import top.nefeli.schedule.viewmodel.ScheduleViewModelFactory
 import top.nefeli.schedule.viewmodel.SettingsViewModel
 import top.nefeli.schedule.viewmodel.SettingsViewModelFactory
 import java.io.File
 import java.io.FileOutputStream
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImportScheduleScreen(
@@ -61,7 +57,7 @@ fun ImportScheduleScreen(
     onBack: () -> Unit,
     onImportComplete: () -> Unit
 ) {
-    val scheduleViewModel: ScheduleViewModel = viewModel(factory = scheduleViewModelFactory)
+//    val scheduleViewModel: ScheduleViewModel = viewModel(factory = scheduleViewModelFactory)
     val settingsViewModel: SettingsViewModel = viewModel(factory = settingsViewModelFactory)
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -96,16 +92,14 @@ fun ImportScheduleScreen(
                     }
                     
                     // 导入课程表
-                    val result = ScheduleImporter.importScheduleFromFile(cacheFile)
-                    
-                    when (result) {
+                    when (val result = ScheduleImporter.importScheduleFromFile(cacheFile)) {
                         is ImportResult.Success -> {
                             // 更新设置
                             settingsViewModel.updateSettings(result.settings)
                             
                             // 清空现有课程表数据
                             // 这里我们简单地重新添加所有导入的课程
-                            result.scheduleData.forEach { course ->
+                            result.scheduleData.forEach { _ ->
                                 // TODO: 需要更新以适配新的数据结构
                                 // scheduleViewModel.addCourse(period, day, course)
                             }

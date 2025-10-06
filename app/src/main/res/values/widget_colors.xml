@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="widget_title_color">@color/primary_70</color>
+    <color name="widget_text_color">@color/neutral_70</color>
+</resources>

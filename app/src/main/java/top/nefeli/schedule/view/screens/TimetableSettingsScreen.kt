@@ -1,7 +1,5 @@
 package top.nefeli.schedule.view.screens
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +30,7 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -47,7 +46,6 @@ import java.time.format.DateTimeFormatter
 /**
  * 时间表设置界面
  */
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimetableSettingsScreen(
@@ -111,9 +109,9 @@ fun QuickSetupDialog(
     var morningStart by remember { mutableStateOf(LocalTime.of(8, 0)) }
     var afternoonStart by remember { mutableStateOf(LocalTime.of(14, 0)) }
     var eveningStart by remember { mutableStateOf(LocalTime.of(19, 0)) }
-    var periodDuration by remember { mutableStateOf(45) }
-    var breakDuration by remember { mutableStateOf(10) }
-    var longBreakDuration by remember { mutableStateOf(20) }
+    var periodDuration by remember { mutableIntStateOf(45) }
+    var breakDuration by remember { mutableIntStateOf(10) }
+    var longBreakDuration by remember { mutableIntStateOf(20) }
     var breakPeriodsText by remember { mutableStateOf("2,4") }
     
     AlertDialog(
