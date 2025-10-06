@@ -366,63 +366,9 @@ class ScheduleRepository(context: Context) {
         val existingPeriods = courseDao.getAllPeriods().first()
         if (existingPeriods.isNotEmpty()) return // 如果已有数据，则不初始化
 
-        // 定义默认的节次时间表
-        val defaultPeriods = listOf(
-            Period(
-                "1",
-                java.time.LocalTime.of(8, 0),
-                java.time.LocalTime.of(8, 45),
-                sortOrder = 1
-            ),
-            Period(
-                "2",
-                java.time.LocalTime.of(8, 55),
-                java.time.LocalTime.of(9, 40),
-                sortOrder = 2
-            ),
-            Period(
-                "3",
-                java.time.LocalTime.of(9, 50),
-                java.time.LocalTime.of(10, 35),
-                sortOrder = 3
-            ),
-            Period(
-                "4",
-                java.time.LocalTime.of(10, 45),
-                java.time.LocalTime.of(11, 30),
-                sortOrder = 4
-            ),
-            Period(
-                "5",
-                java.time.LocalTime.of(14, 0),
-                java.time.LocalTime.of(14, 45),
-                sortOrder = 5
-            ),
-            Period(
-                "6",
-                java.time.LocalTime.of(14, 55),
-                java.time.LocalTime.of(15, 40),
-                sortOrder = 6
-            ),
-            Period(
-                "7",
-                java.time.LocalTime.of(15, 50),
-                java.time.LocalTime.of(16, 35),
-                sortOrder = 7
-            ),
-            Period(
-                "8",
-                java.time.LocalTime.of(16, 45),
-                java.time.LocalTime.of(17, 30),
-                sortOrder = 8
-            ),
-            Period(
-                "9",
-                java.time.LocalTime.of(19, 0),
-                java.time.LocalTime.of(19, 45),
-                sortOrder = 9
-            )
-        )
+        // 使用Period类中的默认节次时间表
+        val defaultPeriods = Period.createDefaultPeriods()
+        
         // 添加默认节次时间表到数据库
         for (period in defaultPeriods) {
             courseDao.insertPeriod(period)

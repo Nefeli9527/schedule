@@ -99,4 +99,21 @@
     <!-- Reset Timetable -->
     <string name="reset_timetable">Reset Timetable</string>
     <string name="reset_timetable_confirm_message">Are you sure you want to reset this timetable? This will delete all courses and schedules in this timetable.</string>
+
+    <!-- Period Management -->
+    <string name="period_management_desc">Manage the作息 time arrangements for courses</string>
+    <string name="period_name">Period Name</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    <string name="period_type">Period Type</string>
+    <string name="sort_order">Sort Order</string>
+    <string name="add_period">Add Period</string>
+    <string name="edit_period">Edit Period</string>
+    <string name="delete_period">Delete Period</string>
+    <string name="confirm_delete">Confirm Delete</string>
+    <string name="confirm_delete_period">Are you sure you want to delete the period "%s"?</string>
+    <string name="no_periods_yet">No作息 time arrangements yet</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>

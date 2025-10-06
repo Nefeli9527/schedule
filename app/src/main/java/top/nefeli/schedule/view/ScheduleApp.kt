@@ -23,6 +23,7 @@ import top.nefeli.schedule.R
 import top.nefeli.schedule.data.ScheduleRepository
 import top.nefeli.schedule.view.screens.AddCourseScreen
 import top.nefeli.schedule.view.screens.ImportScheduleScreen
+import top.nefeli.schedule.view.screens.PeriodManagementScreen
 import top.nefeli.schedule.view.screens.ScheduleScreen
 import top.nefeli.schedule.view.screens.SettingsScreen
 import top.nefeli.schedule.viewmodel.ScheduleViewModel
@@ -164,7 +165,8 @@ fun ScheduleApp(
             "settings" -> SettingsScreen(
                 settingsViewModelFactory = settingsViewModelFactory,
                 onBack = { currentScreen = "schedule" },
-                navigateToTimetableSettings = { currentScreen = "timetable_settings" }
+                navigateToTimetableSettings = { currentScreen = "timetable_settings" },
+                navigateToPeriodManagement = { currentScreen = "period_management" }
             )
 
             "import" -> ImportScheduleScreen(
@@ -172,6 +174,12 @@ fun ScheduleApp(
                 settingsViewModelFactory = settingsViewModelFactory,
                 onBack = { currentScreen = "schedule" },
                 onImportComplete = { currentScreen = "schedule" }
+            )
+
+            "period_management" -> PeriodManagementScreen(
+                scheduleViewModelFactory = viewModelFactory,
+                settingsViewModelFactory = settingsViewModelFactory,
+                onBack = { currentScreen = "schedule" }
             )
         }
 

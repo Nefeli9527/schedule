@@ -99,4 +99,21 @@
     <!-- Reset Timetable -->
     <string name="reset_timetable">重置时间表</string>
     <string name="reset_timetable_confirm_message">确定要重置此时间表吗？这将删除该时间表中的所有课程和课程安排。</string>
+
+    <!-- Period Management -->
+    <string name="period_management_desc">管理课程的作息时间安排</string>
+    <string name="period_name">节次名称</string>
+    <string name="start_time">开始时间</string>
+    <string name="end_time">结束时间</string>
+    <string name="period_type">时段类型</string>
+    <string name="sort_order">排序序号</string>
+    <string name="add_period">添加节次</string>
+    <string name="edit_period">编辑节次</string>
+    <string name="delete_period">删除节次</string>
+    <string name="confirm_delete">确认删除</string>
+    <string name="confirm_delete_period">确定要删除节次 "%s" 吗？</string>
+    <string name="no_periods_yet">暂无作息时间安排</string>
+    <string name="add">添加</string>
+    <string name="edit">编辑</string>
+    <string name="delete">删除</string>
 </resources>
