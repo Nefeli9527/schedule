@@ -22,7 +22,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -50,8 +50,8 @@ fun ScheduleScreen(
     val teachers by viewModel.teachers.collectAsStateWithLifecycle()
     val locations by viewModel.locations.collectAsStateWithLifecycle()
     val settings by settingsViewModel.settings.collectAsStateWithLifecycle()
-    val timetableSchedules by viewModel.timetableSchedules.collectAsStateWithLifecycle()
-    var tapCount by remember { mutableStateOf(0) }
+    val periods by viewModel.period.collectAsStateWithLifecycle()
+    var tapCount by remember { mutableIntStateOf(0) }
     val tapTimeoutMs = 3000L // 3秒内点击有效
     
     LaunchedEffect(tapCount) {
@@ -131,7 +131,7 @@ fun ScheduleScreen(
                     teachers = teachers,
                     locations = locations,
                     settings = settings,
-                    timetableSchedules = timetableSchedules // 传递作息时间表数据
+                    periods = periods // 传递作息时间表数据
                 )
             }
         }

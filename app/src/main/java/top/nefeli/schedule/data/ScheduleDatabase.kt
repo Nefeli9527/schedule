@@ -8,13 +8,13 @@ import androidx.room.TypeConverters
 import top.nefeli.schedule.model.Adjust
 import top.nefeli.schedule.model.Course
 import top.nefeli.schedule.model.Location
+import top.nefeli.schedule.model.Period
 import top.nefeli.schedule.model.Schedule
 import top.nefeli.schedule.model.Teacher
 import top.nefeli.schedule.model.Timetable
-import top.nefeli.schedule.model.TimetableSchedule
 
 @Database(
-    entities = [Timetable::class, Course::class, Schedule::class, Location::class, Teacher::class, TimetableSchedule::class, Adjust::class],
+    entities = [Timetable::class, Course::class, Schedule::class, Location::class, Teacher::class, Period::class, Adjust::class],
     version = 1, // 更新版本号为2
     exportSchema = false
 )

@@ -17,10 +17,10 @@ import top.nefeli.schedule.data.ScheduleRepository
 import top.nefeli.schedule.model.Adjust
 import top.nefeli.schedule.model.Course
 import top.nefeli.schedule.model.Location
+import top.nefeli.schedule.model.Period
 import top.nefeli.schedule.model.Schedule
 import top.nefeli.schedule.model.Teacher
 import top.nefeli.schedule.model.Timetable
-import top.nefeli.schedule.model.TimetableSchedule
 
 /**
  * 课程表 ViewModel 类
@@ -56,8 +56,8 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
     val teachers: StateFlow<List<Teacher>> = _teachers.asStateFlow()
 
     // 作息时间表
-    private val _timetableSchedules = MutableStateFlow<List<TimetableSchedule>>(emptyList())
-    val timetableSchedules: StateFlow<List<TimetableSchedule>> = _timetableSchedules.asStateFlow()
+    private val _period = MutableStateFlow<List<Period>>(emptyList())
+    val period: StateFlow<List<Period>> = _period.asStateFlow()
 
     // 调课记录
     private val _adjustments = MutableStateFlow<List<Adjust>>(emptyList())
@@ -75,15 +75,15 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
         loadTimetables()
         loadLocations()
         loadTeachers()
-        loadTimetableSchedules()
+        loadPeriods()
         loadAdjustments()
         loadQuickCache()
         
         // 初始化默认的作息时间表
         viewModelScope.launch {
-            repository.initializeDefaultTimetableSchedules()
+            repository.initializeDefaultPeriods()
             // 重新加载作息时间表数据以确保UI更新
-            loadTimetableSchedules()
+            loadPeriods()
         }
     }
 
@@ -102,9 +102,6 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
                     loadCoursesForTimetable(timetableId)
                     loadSchedules()
                 }
-            } else if (_timetables.value.isEmpty()) {
-                // 如果没有课表，创建默认课表
-                createDefaultTimetable()
             }
         }
     }
@@ -130,9 +127,9 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
     /**
      * 加载所有作息时间表数据
      */
-    private fun loadTimetableSchedules() {
+    private fun loadPeriods() {
         viewModelScope.launch {
-            _timetableSchedules.value = repository.getAllTimetableSchedules()
+            _period.value = repository.getAllPeriods()
         }
     }
 
@@ -210,7 +207,7 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
                         // 确保其他相关数据也被加载
                         loadLocations()
                         loadTeachers()
-                        loadTimetableSchedules()
+                        loadPeriods()
                         loadAdjustments()
                     }
                 } else {
@@ -230,7 +227,7 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
             loadTimetables()
             loadLocations()
             loadTeachers()
-            loadTimetableSchedules()
+            loadPeriods()
             loadAdjustments()
         }
     }
@@ -776,10 +773,10 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
      *
      * @param schedule 作息时间安排对象
      */
-    fun addTimetableSchedule(schedule: TimetableSchedule) {
+    fun addPeriod(schedule: Period) {
         viewModelScope.launch {
-            repository.addTimetableSchedule(schedule)
-            loadTimetableSchedules()
+            repository.addPeriod(schedule)
+            loadPeriods()
         }
     }
 
@@ -788,10 +785,10 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
      *
      * @param schedule 需要更新的作息时间安排对象
      */
-    fun updateTimetableSchedule(schedule: TimetableSchedule) {
+    fun updatePeriod(schedule: Period) {
         viewModelScope.launch {
-            repository.updateTimetableSchedule(schedule)
-            loadTimetableSchedules()
+            repository.updatePeriod(schedule)
+            loadPeriods()
         }
     }
 
@@ -800,10 +797,10 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
      *
      * @param schedule 需要删除的作息时间安排对象
      */
-    fun deleteTimetableSchedule(schedule: TimetableSchedule) {
+    fun deletePeriod(schedule: Period) {
         viewModelScope.launch {
-            repository.deleteTimetableSchedule(schedule)
-            loadTimetableSchedules()
+            repository.deletePeriod(schedule)
+            loadPeriods()
         }
     }
 
@@ -844,10 +841,10 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
     /**
      * 初始化默认的作息时间表
      */
-    fun initializeDefaultTimetableSchedules() {
+    fun initializeDefaultPeriods() {
         viewModelScope.launch {
-            repository.initializeDefaultTimetableSchedules()
-            loadTimetableSchedules()
+            repository.initializeDefaultPeriods()
+            loadPeriods()
         }
     }
 
@@ -883,30 +880,6 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
      */
     suspend fun findSchedulesByCourse(courseId: Long): List<Schedule> {
         return repository.getSchedulesByCourse(courseId)
-    }
-
-    /**
-     * 确保默认的教师和地点记录存在
-     */
-    private suspend fun ensureDefaultRecordsExist() {
-        // 确保至少有一个教师记录
-        val teachers = repository.getAllTeachers()
-        if (teachers.isEmpty()) {
-            repository.addTeacher(Teacher("默认教师"))
-        }
-
-        // 确保至少有一个地点记录
-        val locations = repository.getAllLocations()
-        if (locations.isEmpty()) {
-            repository.addLocation(Location("默认校区", "默认教学楼", "默认教室"))
-        }
-    }
-
-    init {
-        // 确保默认记录存在
-        viewModelScope.launch {
-            ensureDefaultRecordsExist()
-        }
     }
 }
 

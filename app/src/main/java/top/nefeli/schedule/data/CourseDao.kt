@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.Flow
 import top.nefeli.schedule.model.Adjust
 import top.nefeli.schedule.model.Course
 import top.nefeli.schedule.model.Location
+import top.nefeli.schedule.model.Period
 import top.nefeli.schedule.model.Schedule
 import top.nefeli.schedule.model.Teacher
 import top.nefeli.schedule.model.Timetable
-import top.nefeli.schedule.model.TimetableSchedule
 
 @Dao
 interface CourseDao {
@@ -327,48 +327,48 @@ interface CourseDao {
     @Delete
     suspend fun deleteTeacher(teacher: Teacher)
 
-    // TimetableSchedule相关操作
+    // Period相关操作
     /**
-     * 获取所有时间表课程安排，按排序顺序排列
+     * 获取所有节次时间安排，按排序顺序排列
      *
-     * @return 包含所有时间表课程安排的Flow列表
+     * @return 包含所有节次时间安排的Flow列表
      */
-    @Query("SELECT * FROM timetable_schedules ORDER BY sortOrder")
-    fun getAllTimetableSchedules(): Flow<List<TimetableSchedule>>
+    @Query("SELECT * FROM period ORDER BY sortOrder")
+    fun getAllPeriods(): Flow<List<Period>>
 
     /**
-     * 根据ID获取时间表课程安排
+     * 根据ID获取节次时间安排
      *
-     * @param id 时间表课程安排ID
-     * @return 时间表课程安排对象，如果不存在则返回null
+     * @param id 节次时间安排ID
+     * @return 节次时间安排对象，如果不存在则返回null
      */
-    @Query("SELECT * FROM timetable_schedules WHERE id = :id")
-    suspend fun getTimetableScheduleById(id: Long): TimetableSchedule?
+    @Query("SELECT * FROM period WHERE id = :id")
+    suspend fun getPeriodById(id: Long): Period?
 
     /**
-     * 插入时间表课程安排
+     * 插入节次时间安排
      *
-     * @param schedule 要插入的时间表课程安排对象
-     * @return 插入后的时间表课程安排ID
+     * @param period 要插入的节次时间安排对象
+     * @return 插入后的节次时间安排ID
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTimetableSchedule(schedule: TimetableSchedule): Long
+    suspend fun insertPeriod(period: Period): Long
 
     /**
-     * 更新时间表课程安排
+     * 更新节次时间安排
      *
-     * @param schedule 要更新的时间表课程安排对象
+     * @param period 要更新的节次时间安排对象
      */
     @Update
-    suspend fun updateTimetableSchedule(schedule: TimetableSchedule)
+    suspend fun updatePeriod(period: Period)
 
     /**
-     * 删除时间表课程安排
+     * 删除节次时间安排
      *
-     * @param schedule 要删除的时间表课程安排对象
+     * @param period 要删除的节次时间安排对象
      */
     @Delete
-    suspend fun deleteTimetableSchedule(schedule: TimetableSchedule)
+    suspend fun deletePeriod(period: Period)
 
     // Adjust相关操作
     /**
@@ -445,10 +445,10 @@ interface CourseDao {
     suspend fun deleteAllTeachers()
 
     /**
-     * 删除所有时间表课程安排数据
+     * 删除所有节次时间安排数据
      */
-    @Query("DELETE FROM timetable_schedules")
-    suspend fun deleteAllTimetableSchedules()
+    @Query("DELETE FROM period")
+    suspend fun deleteAllPeriods()
 
     /**
      * 删除所有调整项数据

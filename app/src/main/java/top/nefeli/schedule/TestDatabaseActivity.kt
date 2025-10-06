@@ -20,10 +20,11 @@ import top.nefeli.schedule.data.ScheduleRepository
 import top.nefeli.schedule.model.Adjust
 import top.nefeli.schedule.model.Course
 import top.nefeli.schedule.model.Location
+import top.nefeli.schedule.model.Period
 import top.nefeli.schedule.model.Schedule
 import top.nefeli.schedule.model.Teacher
 import top.nefeli.schedule.model.Timetable
-import top.nefeli.schedule.model.TimetableSchedule
+import java.time.LocalTime
 
 class TestDatabaseActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,27 +72,27 @@ fun TestDatabaseScreen(repository: ScheduleRepository) {
                     classroom = "A101"
                 )
                 val locationId = repository.addLocation(location)
-                
-                val timetableSchedules = listOf(
-                    TimetableSchedule(
+
+                val periods = listOf(
+                    Period(
                         name = "第1节课",
-                        startTime = java.time.LocalTime.of(8, 0),
-                        endTime = java.time.LocalTime.of(8, 45),
+                        startTime = LocalTime.of(8, 0),
+                        endTime = LocalTime.of(8, 45),
                         periodType = "上午",
                         sortOrder = 1
                     ),
-                    TimetableSchedule(
+                    Period(
                         name = "第2节课",
-                        startTime = java.time.LocalTime.of(8, 55),
-                        endTime = java.time.LocalTime.of(9, 40),
+                        startTime = LocalTime.of(8, 55),
+                        endTime = LocalTime.of(9, 40),
                         periodType = "上午",
                         sortOrder = 2
                     )
                 )
                 
                 val scheduleIds = mutableListOf<Long>()
-                for (schedule in timetableSchedules) {
-                    scheduleIds.add(repository.addTimetableSchedule(schedule))
+                for (schedule in periods) {
+                    scheduleIds.add(repository.addPeriod(schedule))
                 }
                 
                 val schedule = Schedule(
@@ -109,8 +110,8 @@ fun TestDatabaseScreen(repository: ScheduleRepository) {
                     date = java.time.LocalDate.now(),
                     scheduleId = schedule.id,
                     targetDate = java.time.LocalDate.now().plusDays(1),
-                    startTime = java.time.LocalTime.of(10, 0),
-                    endTime = java.time.LocalTime.of(11, 30),
+                    startTime = LocalTime.of(10, 0),
+                    endTime = LocalTime.of(11, 30),
                     originalPeriodId = null,
                     adjustType = "调课",
                     note = "教室变更"

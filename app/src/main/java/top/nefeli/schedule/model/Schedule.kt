@@ -8,7 +8,7 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 
 /**
- * 日程实体类（课程时间安排）
+ * 课程时间安排实体类
  */
 @Entity(
     tableName = "schedules",

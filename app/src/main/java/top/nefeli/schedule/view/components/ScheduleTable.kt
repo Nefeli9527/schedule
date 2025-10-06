@@ -47,10 +47,10 @@ import androidx.compose.ui.unit.sp
 import top.nefeli.schedule.R
 import top.nefeli.schedule.model.Course
 import top.nefeli.schedule.model.Location
+import top.nefeli.schedule.model.Period
 import top.nefeli.schedule.model.Schedule
 import top.nefeli.schedule.model.Settings
 import top.nefeli.schedule.model.Teacher
-import top.nefeli.schedule.model.TimetableSchedule
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -64,7 +64,7 @@ fun ScheduleTable(
     teachers: List<Teacher>,
     locations: List<Location>,
     settings: Settings,
-    timetableSchedules: List<TimetableSchedule> = emptyList(), // 添加作息时间表参数
+    periods: List<Period> = emptyList(), // 添加作息时间表参数
 ) {
     val daysOfWeek = buildList {
         add(stringResource(R.string.period_label))
@@ -303,11 +303,6 @@ fun ScheduleTable(
             )
         }
 
-        // 获取作息时间表数据
-        // val timetableSchedules by remember { mutableStateOf<List<TimetableSchedule>>(emptyList()) }
-        // 注意：这里应该通过 ViewModel 或 Repository 获取实际的作息时间表数据
-        // 目前我们使用空列表，后续需要通过依赖注入获取真实数据
-
         // 先恢复原来的布局确保功能正常
         Row(
             modifier = Modifier
@@ -329,7 +324,15 @@ fun ScheduleTable(
 
             for (i in 1..numberOfDays) {
                 val dayOfWeek = if (settings.showWeekends) i else if (i >= 6) i + 1 else i
-                val dayDate = settings.semesterStartDate.plusDays(((actualSelectedWeek) - 1) * numberOfDays + (dayOfWeek - 1).toLong())
+                val daysOffset = if (settings.showWeekends) {
+                    ((actualSelectedWeek) - 1) * numberOfDays + (dayOfWeek - 1).toLong()
+                } else {
+                    // 当隐藏周末时，需要计算实际的日期偏移量
+                    val weeksOffset = (actualSelectedWeek - 1) * 7
+                    val actualDayIndex = if (dayOfWeek >= 6) dayOfWeek + 1 else dayOfWeek
+                    (weeksOffset + actualDayIndex - 1).toLong()
+                }
+                val dayDate = settings.semesterStartDate.plusDays(daysOffset)
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -384,7 +387,7 @@ fun ScheduleTable(
                     // 移除额外的Box包装，让PeriodCell直接控制大小
                     PeriodCell(
                         period = period,
-                        timetableSchedules = timetableSchedules, // 传递作息时间表数据
+                        periods = periods, // 传递作息时间表数据
                         rowSpan = 1,
                         rowHeight = rowHeight
                     )
@@ -565,12 +568,12 @@ fun createDisplaySchedule(
 @Composable
 fun PeriodCell(
     period: Int,
-    timetableSchedules: List<TimetableSchedule>,
+    periods: List<Period>,
     rowSpan: Int = 1,
-    rowHeight: Dp
+    rowHeight: Dp,
 ) {
     // 查找当前节次的作息时间
-    val periodSchedule = timetableSchedules.find { 
+    val periodSchedule = periods.find {
         it.name == stringResource(R.string.period_number, period) || it.sortOrder == period 
     }
 

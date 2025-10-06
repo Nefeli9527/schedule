@@ -5,10 +5,10 @@ import kotlinx.coroutines.flow.first
 import top.nefeli.schedule.model.Adjust
 import top.nefeli.schedule.model.Course
 import top.nefeli.schedule.model.Location
+import top.nefeli.schedule.model.Period
 import top.nefeli.schedule.model.Schedule
 import top.nefeli.schedule.model.Teacher
 import top.nefeli.schedule.model.Timetable
-import top.nefeli.schedule.model.TimetableSchedule
 
 /**
  * 课程表数据仓库类
@@ -231,31 +231,31 @@ class ScheduleRepository(context: Context) {
     }
 
     /**
-     * 获取所有作息时间
+     * 获取所有节次时间
      */
-    suspend fun getAllTimetableSchedules(): List<TimetableSchedule> {
-        return courseDao.getAllTimetableSchedules().first()
+    suspend fun getAllPeriods(): List<Period> {
+        return courseDao.getAllPeriods().first()
     }
 
     /**
-     * 添加作息时间
+     * 添加节次时间
      */
-    suspend fun addTimetableSchedule(schedule: TimetableSchedule): Long {
-        return courseDao.insertTimetableSchedule(schedule)
+    suspend fun addPeriod(period: Period): Long {
+        return courseDao.insertPeriod(period)
     }
 
     /**
-     * 更新作息时间
+     * 更新节次时间
      */
-    suspend fun updateTimetableSchedule(schedule: TimetableSchedule) {
-        courseDao.updateTimetableSchedule(schedule)
+    suspend fun updatePeriod(period: Period) {
+        courseDao.updatePeriod(period)
     }
 
     /**
-     * 删除作息时间
+     * 删除节次时间
      */
-    suspend fun deleteTimetableSchedule(schedule: TimetableSchedule) {
-        courseDao.deleteTimetableSchedule(schedule)
+    suspend fun deletePeriod(period: Period) {
+        courseDao.deletePeriod(period)
     }
 
     /**
@@ -359,92 +359,73 @@ class ScheduleRepository(context: Context) {
     }
     
     /**
-     * 初始化默认的作息时间表
+     * 初始化默认的节次时间表
      */
-    suspend fun initializeDefaultTimetableSchedules() {
-        // 检查是否已存在作息时间表数据
-        val existingSchedules = courseDao.getAllTimetableSchedules().first()
-        if (existingSchedules.isNotEmpty()) return // 如果已有数据，则不初始化
-        
-        // 定义默认的作息时间表
-        val defaultSchedules = listOf(
-            TimetableSchedule(
+    suspend fun initializeDefaultPeriods() {
+        // 检查是否已存在节次时间表数据
+        val existingPeriods = courseDao.getAllPeriods().first()
+        if (existingPeriods.isNotEmpty()) return // 如果已有数据，则不初始化
+
+        // 定义默认的节次时间表
+        val defaultPeriods = listOf(
+            Period(
                 "1",
                 java.time.LocalTime.of(8, 0),
                 java.time.LocalTime.of(8, 45),
                 sortOrder = 1
             ),
-            TimetableSchedule(
+            Period(
                 "2",
                 java.time.LocalTime.of(8, 55),
                 java.time.LocalTime.of(9, 40),
                 sortOrder = 2
             ),
-            TimetableSchedule(
+            Period(
                 "3",
                 java.time.LocalTime.of(9, 50),
                 java.time.LocalTime.of(10, 35),
                 sortOrder = 3
             ),
-            TimetableSchedule(
+            Period(
                 "4",
                 java.time.LocalTime.of(10, 45),
                 java.time.LocalTime.of(11, 30),
                 sortOrder = 4
             ),
-            TimetableSchedule(
+            Period(
                 "5",
-                java.time.LocalTime.of(11, 40),
-                java.time.LocalTime.of(12, 25),
-                sortOrder = 5
-            ),
-            TimetableSchedule(
-                "6",
                 java.time.LocalTime.of(14, 0),
                 java.time.LocalTime.of(14, 45),
-                sortOrder = 6
+                sortOrder = 5
             ),
-            TimetableSchedule(
-                "7",
+            Period(
+                "6",
                 java.time.LocalTime.of(14, 55),
                 java.time.LocalTime.of(15, 40),
-                sortOrder = 7
+                sortOrder = 6
             ),
-            TimetableSchedule(
-                "8",
+            Period(
+                "7",
                 java.time.LocalTime.of(15, 50),
                 java.time.LocalTime.of(16, 35),
-                sortOrder = 8
+                sortOrder = 7
             ),
-            TimetableSchedule(
-                "9",
+            Period(
+                "8",
                 java.time.LocalTime.of(16, 45),
                 java.time.LocalTime.of(17, 30),
-                sortOrder = 9
+                sortOrder = 8
             ),
-            TimetableSchedule(
-                "10",
+            Period(
+                "9",
                 java.time.LocalTime.of(19, 0),
                 java.time.LocalTime.of(19, 45),
-                sortOrder = 10
-            ),
-            TimetableSchedule(
-                "11",
-                java.time.LocalTime.of(19, 55),
-                java.time.LocalTime.of(20, 40),
-                sortOrder = 11
-            ),
-            TimetableSchedule(
-                "12",
-                java.time.LocalTime.of(20, 50),
-                java.time.LocalTime.of(21, 35),
-                sortOrder = 12
+                sortOrder = 9
             )
         )
-        
-        // 添加默认作息时间表到数据库
-        for (schedule in defaultSchedules) {
-            courseDao.insertTimetableSchedule(schedule)
+        // 添加默认节次时间表到数据库
+        for (period in defaultPeriods) {
+            courseDao.insertPeriod(period)
         }
     }
     
@@ -452,22 +433,16 @@ class ScheduleRepository(context: Context) {
      * 创建默认课表
      */
     suspend fun createDefaultTimetable(): Long {
-        // 检查是否已存在课表
         val existingTimetables = courseDao.getAllTimetables().first()
         if (existingTimetables.isNotEmpty()) {
-            // 如果已有课表，返回第一个课表的ID
             return existingTimetables[0].id
         }
-        
-        // 创建默认课表
         val defaultTimetable = Timetable(
             name = "默认课表",
             semester = "2023-2024学年",
             classId = "默认班级",
             note = "系统自动创建的默认课表"
         )
-        
-        // 插入数据库并返回ID
         return courseDao.insertTimetable(defaultTimetable)
     }
 }
