@@ -149,6 +149,13 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
         viewModelScope.launch {
             _period.value = repository.getAllPeriods()
             Log.d(TAG, "作息时间表数据加载完成，数量: ${_period.value.size}")
+            // 打印所有period的详细信息
+            _period.value.forEach { period ->
+                Log.d(
+                    TAG,
+                    "加载的Period: id=${period.id}, name=${period.name}, startTime=${period.startTime}, endTime=${period.endTime}, periodType=${period.periodType}, sortOrder=${period.sortOrder}"
+                )
+            }
         }
     }
 
@@ -816,9 +823,15 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
      * @param schedule 作息时间安排对象
      */
     fun addPeriod(schedule: Period) {
+        Log.d(
+            TAG,
+            "addPeriod called with: id=${schedule.id}, name=${schedule.name}, startTime=${schedule.startTime}, endTime=${schedule.endTime}, periodType=${schedule.periodType}, sortOrder=${schedule.sortOrder}"
+        )
         viewModelScope.launch {
             repository.addPeriod(schedule)
+            Log.d(TAG, "addPeriod: repository.addPeriod completed")
             loadPeriods()
+            Log.d(TAG, "addPeriod: loadPeriods completed")
         }
     }
 
@@ -828,9 +841,15 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
      * @param schedule 需要更新的作息时间安排对象
      */
     fun updatePeriod(schedule: Period) {
+        Log.d(
+            TAG,
+            "updatePeriod called with: id=${schedule.id}, name=${schedule.name}, startTime=${schedule.startTime}, endTime=${schedule.endTime}, periodType=${schedule.periodType}, sortOrder=${schedule.sortOrder}"
+        )
         viewModelScope.launch {
             repository.updatePeriod(schedule)
+            Log.d(TAG, "updatePeriod: repository.updatePeriod completed")
             loadPeriods()
+            Log.d(TAG, "updatePeriod: loadPeriods completed")
         }
     }
 
@@ -840,9 +859,15 @@ class ScheduleViewModel(private val repository: ScheduleRepository, private val 
      * @param schedule 需要删除的作息时间安排对象
      */
     fun deletePeriod(schedule: Period) {
+        Log.d(
+            TAG,
+            "deletePeriod called with: id=${schedule.id}, name=${schedule.name}, startTime=${schedule.startTime}, endTime=${schedule.endTime}, periodType=${schedule.periodType}, sortOrder=${schedule.sortOrder}"
+        )
         viewModelScope.launch {
             repository.deletePeriod(schedule)
+            Log.d(TAG, "deletePeriod: repository.deletePeriod completed")
             loadPeriods()
+            Log.d(TAG, "deletePeriod: loadPeriods completed")
         }
     }
 

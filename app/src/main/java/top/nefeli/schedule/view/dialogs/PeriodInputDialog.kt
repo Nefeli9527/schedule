@@ -16,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -149,8 +148,8 @@ fun PeriodInputDialog(
                             // 添加新时段时根据时段类型自动生成名称
                             val typeLabel = when (periodType) {
                                 "上午" -> "上午"
-                                "中午" -> "中午"
                                 "下午" -> "下午"
+                                "晚上" -> "晚上"
                                 else -> "时段"
                             }
                             "$typeLabel${"节次"}"
@@ -162,6 +161,13 @@ fun PeriodInputDialog(
                         startTime = startTime,
                         endTime = endTime,
                         periodType = periodType
+                    ).apply {
+                        // 确保保留原始的id值
+                        id = period.id
+                    }
+                    android.util.Log.d(
+                        "PeriodInputDialog",
+                        "确认时段更新: id=${updatedPeriod.id}, name=${updatedPeriod.name}, startTime=${updatedPeriod.startTime}, endTime=${updatedPeriod.endTime}, periodType=${updatedPeriod.periodType}"
                     )
                     onConfirm(updatedPeriod)
                 }
@@ -229,8 +235,8 @@ fun TimePickerDialog(
                     modifier = Modifier
                 )
 
-                // 更新 selectedTime 以反映 TimePicker 的当前值
-                LaunchedEffect(state.hour, state.minute) {
+                // 监听时间变化并更新selectedTime
+                androidx.compose.runtime.LaunchedEffect(state.hour, state.minute) {
                     selectedTime = LocalTime.of(state.hour, state.minute)
                 }
             }

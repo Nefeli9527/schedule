@@ -56,6 +56,7 @@ fun PeriodManagementScreen(
     scheduleViewModelFactory: ScheduleViewModelFactory,
     settingsViewModelFactory: SettingsViewModelFactory,
     onBack: () -> Unit,
+    navigateToBatchPeriodSetup: () -> Unit = {},
 ) {
     val scheduleViewModel: ScheduleViewModel = viewModel(factory = scheduleViewModelFactory)
     val settingsViewModel: SettingsViewModel = viewModel(factory = settingsViewModelFactory)
@@ -94,14 +95,16 @@ fun PeriodManagementScreen(
                 .padding(paddingValues)
         ) {
             if (periods.isEmpty()) {
-                EmptyPeriodsView {
-                    showAddDialog = true
-                }
+                EmptyPeriodsView(
+                    onAddPeriod = { showAddDialog = true },
+                    onBatchSetup = navigateToBatchPeriodSetup
+                )
             } else {
                 PeriodsListView(
                     periods = periods,
                     onEditPeriod = { periodToEdit = it },
-                    onDeletePeriod = { periodToDelete = it }
+                    onDeletePeriod = { periodToDelete = it },
+                    onBatchSetup = navigateToBatchPeriodSetup
                 )
             }
         }
@@ -113,6 +116,10 @@ fun PeriodManagementScreen(
             period = period,
             numberOfPeriods = settings.numberOfPeriods,
             onConfirm = { updatedPeriod ->
+                android.util.Log.d(
+                    "PeriodManagementScreen",
+                    "确认更新时段: id=${updatedPeriod.id}, name=${updatedPeriod.name}, startTime=${updatedPeriod.startTime}, endTime=${updatedPeriod.endTime}"
+                )
                 scheduleViewModel.updatePeriod(updatedPeriod)
                 periodToEdit = null
             },
@@ -131,7 +138,13 @@ fun PeriodManagementScreen(
             ),
             numberOfPeriods = settings.numberOfPeriods,
             onConfirm = { newPeriod ->
+                android.util.Log.d(
+                    "PeriodManagementScreen",
+                    "确认添加时段: id=${newPeriod.id}, name=${newPeriod.name}, startTime=${newPeriod.startTime}, endTime=${newPeriod.endTime}"
+                )
                 scheduleViewModel.addPeriod(newPeriod)
+                // 更新设置中的课程节数
+                settingsViewModel.updateSettings(settings.copy(numberOfPeriods = periods.size + 1))
                 showAddDialog = false
             },
             onDismiss = { showAddDialog = false }
@@ -147,7 +160,13 @@ fun PeriodManagementScreen(
             confirmButton = {
                 TextButton(
                     onClick = {
+                        android.util.Log.d(
+                            "PeriodManagementScreen",
+                            "确认删除时段: id=${period.id}, name=${period.name}, startTime=${period.startTime}, endTime=${period.endTime}"
+                        )
                         scheduleViewModel.deletePeriod(period)
+                        // 更新设置中的课程节数
+                        settingsViewModel.updateSettings(settings.copy(numberOfPeriods = periods.size - 1))
                         periodToDelete = null
                     }
                 ) {
@@ -166,6 +185,7 @@ fun PeriodManagementScreen(
 @Composable
 fun EmptyPeriodsView(
     onAddPeriod: () -> Unit,
+    onBatchSetup: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -182,6 +202,10 @@ fun EmptyPeriodsView(
         Button(onClick = onAddPeriod) {
             Text(stringResource(R.string.add_period))
         }
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(onClick = onBatchSetup) {
+            Text(stringResource(R.string.batch_period_setup))
+        }
     }
 }
 
@@ -190,6 +214,7 @@ fun PeriodsListView(
     periods: List<Period>,
     onEditPeriod: (Period) -> Unit,
     onDeletePeriod: (Period) -> Unit,
+    onBatchSetup: () -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -203,6 +228,16 @@ fun PeriodsListView(
                 onEdit = { onEditPeriod(period) },
                 onDelete = { onDeletePeriod(period) }
             )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = onBatchSetup,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.batch_period_setup))
+            }
         }
     }
 }

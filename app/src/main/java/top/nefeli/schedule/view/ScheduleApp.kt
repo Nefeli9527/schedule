@@ -27,6 +27,7 @@ import top.nefeli.schedule.model.Course
 import top.nefeli.schedule.model.Period
 import top.nefeli.schedule.model.Schedule
 import top.nefeli.schedule.view.screens.AddCourseScreen
+import top.nefeli.schedule.view.screens.BatchPeriodSetupScreen
 import top.nefeli.schedule.view.screens.ImportScheduleScreen
 import top.nefeli.schedule.view.screens.PeriodManagementScreen
 import top.nefeli.schedule.view.screens.ScheduleScreen
@@ -187,8 +188,16 @@ fun ScheduleApp(
             "period_management" -> PeriodManagementScreen(
                 scheduleViewModelFactory = viewModelFactory,
                 settingsViewModelFactory = settingsViewModelFactory,
-                onBack = { currentScreen = "schedule" }
+                onBack = { currentScreen = "schedule" },
+                navigateToBatchPeriodSetup = { currentScreen = "batch_period_setup" }
             )
+
+            "batch_period_setup" -> BatchPeriodSetupScreen(
+                scheduleViewModelFactory = viewModelFactory,
+                settingsViewModelFactory = settingsViewModelFactory,
+                onBack = { currentScreen = "period_management" }
+            )
+
         }
 
         // 处理返回键逻辑 - 只有不在主页时才处理返回键

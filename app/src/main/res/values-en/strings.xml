@@ -81,11 +81,7 @@
     <string name="active">Active</string>
     <string name="period_count">%d periods</string>
     <string name="quick_setup_description">Automatically assign class times, 4 in the morning, 4 in the afternoon, 1 in the evening</string>
-    <string name="morning_start_time">Morning Start Time</string>
-    <string name="afternoon_start_time">Afternoon Start Time</string>
-    <string name="evening_start_time">Evening Start Time</string>
     <string name="period_duration">Period Duration</string>
-    <string name="break_duration">Break Duration</string>
     <string name="long_break_duration">Long Break Duration</string>
     <string name="break_periods">Long Break Positions</string>
     <string name="break_periods_hint">Enter the positions of long breaks, e.g.: 2,4</string>
@@ -118,4 +114,25 @@
     <string name="add">Add</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+
+    <!-- Batch Period Setup -->
+    <string name="batch_period_setup">Batch Period Setup</string>
+    <string name="batch_period_setup_desc">Set the number of classes, start times for morning, afternoon, and evening, as well as other related parameters</string>
+    <string name="morning_settings">Morning Settings</string>
+    <string name="morning_class_count">Morning Class Count</string>
+    <string name="morning_start_time">Morning Start Time</string>
+    <string name="afternoon_settings">Afternoon Settings</string>
+    <string name="afternoon_class_count">Afternoon Class Count</string>
+    <string name="afternoon_start_time">Afternoon Start Time</string>
+    <string name="evening_settings">Evening Settings</string>
+    <string name="evening_class_count">Evening Class Count</string>
+    <string name="evening_start_time">Evening Start Time</string>
+    <string name="general_settings">General Settings</string>
+    <string name="class_duration">Class Duration</string>
+    <string name="break_duration">Break Duration</string>
+    <string name="large_break_duration">Large Break Duration</string>
+    <string name="large_break_position">Large Break Position</string>
+    <string name="periods_unit">periods</string>
+    <string name="minutes_unit">minutes</string>
+    <string name="apply">Apply</string>
 </resources>

@@ -81,11 +81,7 @@
     <string name="active">激活</string>
     <string name="period_count">%d节课</string>
     <string name="quick_setup_description">自动分配课程时间，上午4节，下午4节，晚上1节</string>
-    <string name="morning_start_time">上午开始时间</string>
-    <string name="afternoon_start_time">下午开始时间</string>
-    <string name="evening_start_time">晚上开始时间</string>
     <string name="period_duration">每节课时长</string>
-    <string name="break_duration">普通课间时长</string>
     <string name="long_break_duration">大课间时长</string>
     <string name="break_periods">大课间位置</string>
     <string name="break_periods_hint">请输入大课间的位置，例如：2,4</string>
@@ -118,4 +114,25 @@
     <string name="add">添加</string>
     <string name="edit">编辑</string>
     <string name="delete">删除</string>
+
+    <!-- Batch Period Setup -->
+    <string name="batch_period_setup">批量设置作息时间</string>
+    <string name="batch_period_setup_desc">设置上午、下午和晚上的课程数量、开始时间以及其他相关参数</string>
+    <string name="morning_settings">上午设置</string>
+    <string name="morning_class_count">上午课节数</string>
+    <string name="morning_start_time">上午开始时间</string>
+    <string name="afternoon_settings">下午设置</string>
+    <string name="afternoon_class_count">下午课节数</string>
+    <string name="afternoon_start_time">下午开始时间</string>
+    <string name="evening_settings">晚上设置</string>
+    <string name="evening_class_count">晚上课节数</string>
+    <string name="evening_start_time">晚上开始时间</string>
+    <string name="general_settings">通用设置</string>
+    <string name="class_duration">课程时长</string>
+    <string name="break_duration">课间时长</string>
+    <string name="large_break_duration">大课间时长</string>
+    <string name="large_break_position">大课间位置</string>
+    <string name="periods_unit">节</string>
+    <string name="minutes_unit">分钟</string>
+    <string name="apply">应用</string>
 </resources>
